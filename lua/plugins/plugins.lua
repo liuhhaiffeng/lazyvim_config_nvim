@@ -312,9 +312,9 @@ return {
     --     "nvim-telescope/telescope-symbols.nvim",
     -- },
 
-    -- {
-    --     "Yggdroot/LeaderF", 
-    -- },
+    {
+        "Yggdroot/LeaderF", 
+    },
 
 
     {
@@ -368,4 +368,26 @@ return {
       autoformat = false,
     },
   },
+
+    -- cxx 文件中, 下面的 else 后单独一行的大括号使用 == 无法自动对齐, 发现此为
+    -- nvim-treesitter 插件导致, 因此将其 indent 禁止, 使用 nvim 原生( nvim -u None)
+    -- 的对齐配置
+    --      if (1)
+    --      {
+    --
+    --      }
+    --      else
+    --  {
+    --
+    --      }
+    --
+    {
+        "nvim-treesitter/nvim-treesitter",
+        opts = {
+            -- 全部禁止
+            indent = { enable = false },
+            -- 禁止指定类型(如: cxx 系列)
+            -- indent = { disable = { "c", "cpp", "cxx", "C", "objc", "duda", "proto", "h", "hpp", "hxx" } },
+        },
+    },
 }
