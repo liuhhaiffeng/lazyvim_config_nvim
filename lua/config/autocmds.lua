@@ -37,3 +37,9 @@ vim.api.nvim_command [[au BufNewFile,BufRead bookmark set filetype=c]]
 vim.api.nvim_command [[au BufNewFile,BufRead bm_pg set filetype=c]]
 -- 刘海峰~/bm (bookmark)书签高亮
 vim.api.nvim_command [[au BufNewFile,BufRead bookmark_pg set filetype=c]]
+
+
+-- .local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs/fsautocomplete.lua:`autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp`
+-- cxx 类型文件的 lsp 默认无法自动开启, 故增加配置开启
+vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx :LspStart]]
+
