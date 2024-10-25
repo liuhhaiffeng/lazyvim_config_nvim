@@ -32,18 +32,42 @@ local options = {
 -- https://teukka.tech/vimtip-gitlens.html
 -- 说明: 当前目录下的文件 git blame 不卡, 可是打开一个 git 项目, 就会很快, 原因未知
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
--- vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
--- vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
--- vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
+vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
+vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
+vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
 
 -- hi! link GitLens Comment
 -- vim.cmd("hi! link GitLens Comment")
 -- vim.api.nvim_command([[hi! link GitLens Comment]])
 -- 上面两句(hi! link)不清楚什么意思, 并且也没有生效, 下面设置生效了
 --   (让 gitlens virtual text 改变颜色了)
--- vim.api.nvim_command("hi GitLens ctermfg=green guifg=green")
+vim.api.nvim_command("hi GitLens ctermfg=green guifg=green")
 -- ----------------------------------------------------------------
 
 -- 说明: 下面两个命令效果等价
 -- vim.cmd("hi Comment ctermfg=blue guifg=blue")
 vim.api.nvim_command("hi Comment ctermfg=blue guifg=blue")
+
+-- 高亮折叠行的颜色
+-- https://vi.stackexchange.com/questions/17842/fold-highlight-folded-text-only
+vim.api.nvim_command("hi Folded ctermfg=cyan guifg=cyan")
+
+--
+-- Leaderf
+--
+-- 禁止 pop 预览窗口
+-- This option specifies whether to preview the result in a popup window.
+-- Default value is 1.
+-- 说明: 实测证明下面 vim.cmd() 和 vim.api.nvim_command() 的效果是等价的
+--       需要说明的是, nvim 目前不支持 vim9 scrip 语法, vim8scrip 语法是
+--       生效的
+-- vim.cmd("g:Lf_PreviewInPopup = 0")       -- vim9 scrip style
+vim.cmd("let g:Lf_PreviewInPopup = 0")      -- vim8 scrip style
+
+-- # 说明: Leaderf 默认使用 rg 来索引文件, 而 rg 默认 repect .gitigore-files 的,
+-- # 即 git-reposity 下 ignore-files 不会被查询到, 这个默认设置不符合本人的要求,
+-- # 本人期望如下 "find xx" 的结果, 因此进行如下的设置
+-- # Default value is 1
+vim.cmd("let g:Lf_UseVersionControlTool = 0")
+vim.cmd("let g:Lf_DefaultExternalTool = \"find\"")
+vim.cmd("let g:Lf_ExternalCommand = 'find \"%s\" -type f'")
