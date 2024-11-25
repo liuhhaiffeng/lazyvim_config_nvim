@@ -39,21 +39,21 @@ vim.opt.mouse = ""
 -- au InsertLeave * :set rnu
 
 --  自动命令lua写法参考: https://neovim.discourse.group/t/autocmd-to-lua-for-filetype/3840
-vim.api.nvim_create_autocmd("InsertEnter", {
-  pattern = "*",
-  callback = function()
-    -- :set nornu
-    vim.wo.relativenumber = false
-  end,
-})
-
-vim.api.nvim_create_autocmd("InsertLeave", {
-  pattern = "*",
-  callback = function()
-    -- :set rnu
-    vim.wo.relativenumber = true
-  end,
-})
+-- vim.api.nvim_create_autocmd("InsertEnter", {
+--   pattern = "*",
+--   callback = function()
+--     -- :set nornu
+--     vim.wo.relativenumber = false
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("InsertLeave", {
+--   pattern = "*",
+--   callback = function()
+--     -- :set rnu
+--     vim.wo.relativenumber = true
+--   end,
+-- })
 
 -- 注: 实际测试发现, 多个分割窗口中, 仅仅用下面命令, 即可达到目的:
 -- 即非焦点的其他窗口不显示"相对行号", 上面的 BufEnter 或 FocusLost
@@ -61,21 +61,24 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 -- au WinEnter * :set rnu
 -- au WinLeave * :set nornu
 
-vim.api.nvim_create_autocmd("WinEnter", {
-  pattern = "*",
-  callback = function()
-    -- :set rnu
-    vim.wo.relativenumber = true
-  end,
-})
+-- vim.api.nvim_create_autocmd("WinEnter", {
+--   pattern = "*",
+--   callback = function()
+--     -- :set rnu
+--     vim.wo.relativenumber = true
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("WinLeave", {
+--   pattern = "*",
+--   callback = function()
+--     -- :set nornu
+--     vim.wo.relativenumber = false
+--   end,
+-- })
 
-vim.api.nvim_create_autocmd("WinLeave", {
-  pattern = "*",
-  callback = function()
-    -- :set nornu
-    vim.wo.relativenumber = false
-  end,
-})
+-- 不太习惯相对行号，将其禁止 （注： 上面的 autocmd relativenumber 也要禁止掉）
+vim.wo.relativenumber = false
 
 -- How to disable autoformating on save on LazyVim
 -- https://vi.stackexchange.com/questions/42597/how-to-disable-autoformating-on-save-on-lazyvim
@@ -99,3 +102,45 @@ vim.opt.foldmethod = "manual"
 
 -- 自动 wrap
 vim.opt.wrap = true
+
+-- https://github.com/LazyVim/LazyVim/discussions/2215
+-- easymotion 时， clangd diagnostics 会显示出来，形成干扰，因此默认情况不开启
+-- 诊断功能
+-- 注： 当然也可以使用下面的方式：
+--
+-- 方法1
+-- -- ~/.config/nvim/lua/plugins/lsp.lua
+-- return {
+--   {
+--     "nvim-lspconfig",
+--     opts = {
+--       diagnostics = {
+--         virtual_text = false,
+--         signs = false,
+--       },
+--     },
+--   },
+-- }
+--
+-- 方法2
+-- 此方法，每次启动 nvim 时，都会提示 diagnostics 已关闭，非常烦人
+-- require("lazyvim.util").toggle.diagnostics()
+
+-- lazyvim 将 vim 默认的 foldtext() 进行了重新, 详见
+-- lazy/LazyVim/lua/lazyvim/util/ui.lua 中 M.foldtext()
+-- 此导致, foldline 不显示 折叠的行数
+-- vim.opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"
+-- 覆盖
+-- lazy/LazyVim/lua/lazyvim/config/options.lua 中
+--     129:  opt.foldtext = "v:lua.require'lazyvim.util'.ui.foldtext()"    You • 1 month ago • 1. 快捷键增加 2. 支持 gtags插件 3. 支持 LeaderF
+--
+-- 扩展: vim 默认 foldtext() 返回内容中包含如下部分:
+--    1. 折叠的行数 2. 折叠的首行内容
+--
+--  如果将 foldtext 设置为如下的 "", 则仅显示 "折叠的行数"
+-- vim.opt.foldtext = ""
+vim.opt.foldtext = "foldtext()"
+
+-- lazyvim rootdir 默认识别为 /home/uxdb (注: :LazyRoot 查看), 导致查找等操作很慢,
+-- 显式将其设置为启动 nvim 时的"当前目录"
+vim.g.root_spec = { "cwd" }
