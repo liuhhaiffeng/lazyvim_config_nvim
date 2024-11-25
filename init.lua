@@ -46,7 +46,10 @@ vim.api.nvim_command("hi GitLens ctermfg=green guifg=green")
 
 -- 说明: 下面两个命令效果等价
 -- vim.cmd("hi Comment ctermfg=blue guifg=blue")
-vim.api.nvim_command("hi Comment ctermfg=blue guifg=blue")
+-- 说明：我的 y9000p 笔记屏幕，对于 blue 显示看不清楚， 暂时将其修改为
+--       绿色
+-- vim.api.nvim_command("hi Comment ctermfg=blue guifg=blue")
+vim.api.nvim_command("hi Comment ctermfg=green guifg=green")
 
 -- 高亮折叠行的颜色
 -- https://vi.stackexchange.com/questions/17842/fold-highlight-folded-text-only
