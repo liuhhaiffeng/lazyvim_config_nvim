@@ -98,7 +98,7 @@ return {
         table.insert(opts.sections.lualine_x, "filetype")
         table.insert(opts.sections.lualine_y, "%L")   -- 显示总行数
         table.insert(opts.sections.lualine_y, "selectioncount")
-        table.insert(opts.sections.lualine_y, "diagnostics")
+        -- table.insert(opts.sections.lualine_y, "diagnostics")    -- 左侧默认已经有了，这里就不冗余添加了
   end,
   },
 
@@ -390,4 +390,25 @@ return {
             -- indent = { disable = { "c", "cpp", "cxx", "C", "objc", "duda", "proto", "h", "hpp", "hxx" } },
         },
     },
+
+    -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
+    {
+        "nvim-lspconfig",
+        opts = {
+            -- 参考： /home/haifeng/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
+            diagnostics = {
+                virtual_text = false,
+                signs = false,
+                underline = false,
+            },
+        },
+    },
+
+    -- CXX 下不习惯 inlay_hints， 禁止掉
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            inlay_hints = { enabled = false },
+        },
+    }
 }
