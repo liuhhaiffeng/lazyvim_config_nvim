@@ -43,3 +43,13 @@ vim.api.nvim_command [[au BufNewFile,BufRead bookmark_pg set filetype=c]]
 -- cxx 类型文件的 lsp 默认无法自动开启, 故增加配置开启
 vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx :LspStart]]
 
+-- lazyvim markdown codeblock tags(即 tab按键上面的那个“撇”符号， ```sh  ```) 
+-- 默认不显示，通过如下设置让其显示：
+-- How to get markdown always to display the source code？
+-- https://github.com/LazyVim/LazyVim/discussions/269
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "markdown" },
+  callback = function()
+    vim.wo.conceallevel = 0
+  end,
+})

@@ -418,5 +418,5 @@ return {
         opts = {
             inlay_hints = { enabled = false },
         },
-    }
+    },
 }
