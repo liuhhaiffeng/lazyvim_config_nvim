@@ -10,8 +10,8 @@ local opts = { noremap = true, silent = true }
 -- https://www.zhihu.com/tardis/zm/art/435680085?source_id=1005
 -- j / k 移动太慢， ctrl + u / ctrl + d 默认移动半屏，翻太快，一不留神就不知道翻到哪了
 -- 我喜欢把 ctrl + u / ctrl + d 设置成移动 9 行，
-map("n", "<C-u>", "9k", opts)
-map("n", "<C-d>", "9j", opts)
+-- map("n", "<C-u>", "9k", opts)
+-- map("n", "<C-d>", "9j", opts)
 
 map("n", "k", "kzz", opts)
 map("n", "j", "jzz", opts)

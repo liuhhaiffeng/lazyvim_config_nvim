@@ -27,11 +27,14 @@ vim.bo.expandtab = true
 -- https://vi.stackexchange.com/questions/37186/how-do-i-port-a-filetype-command-to-neovims-lua-format
 -- https://vi.stackexchange.com/questions/233/how-can-i-automatically-indent-on-new-lines
 -- vim.api.nvim_command('filetype indent on')
-vim.api.nvim_command('filetype plugin indent on')
+vim.api.nvim_command("filetype plugin indent on")
 
 -- 关闭鼠标
 -- lhf: lazyvim 打开鼠标操作感觉更加好用(像vscode)一样, 故禁止如下行
-vim.opt.mouse = ""
+-- vim.opt.mouse = ""
+
+-- 默认搜索和替换大小写敏感
+vim.o.ignorecase = false
 
 -- 学习 helix 做法, 插入模式下, 显示绝对行号
 -- vim 自动命令: https://zhuanlan.zhihu.com/p/98360630

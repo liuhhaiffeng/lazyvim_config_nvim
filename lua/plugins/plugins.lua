@@ -99,6 +99,14 @@ return {
         table.insert(opts.sections.lualine_y, "%L")   -- 显示总行数
         table.insert(opts.sections.lualine_y, "selectioncount")
         -- table.insert(opts.sections.lualine_y, "diagnostics")    -- 左侧默认已经有了，这里就不冗余添加了
+
+        -- 某些场景下，我需要显示 full path， 通过此设定
+        -- 参考：https://github.com/LazyVim/LazyVim/discussions/3010
+        -- 参考2： ~/.local/share/nvim/lazy/lualine.nvim/doc/lualine.txt 736
+        table.insert(opts.sections.lualine_c, {
+            "filename",
+            path = 3,
+        })
   end,
   },
 
