@@ -437,6 +437,9 @@ return {
     -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
     -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
     -- https://github.com/LazyVim/LazyVim/discussions/5152
+    --
+    -- blink.cmp as nvim-cmp’s alternative #4679
+    -- https://github.com/LazyVim/LazyVim/discussions/4679
     {
         "Saghen/blink.cmp",
         opts = {
