@@ -419,4 +419,35 @@ return {
             inlay_hints = { enabled = false },
         },
     },
+
+    -- {
+    --     "ibhagwan/fzf-lua",
+    --     -- optional for icon support
+    --     dependencies = { "nvim-tree/nvim-web-devicons" },
+    --     config = function()
+    --         -- calling `setup` is optional for customization
+    --         -- require("fzf-lua").setup({})
+    --         require("fzf-lua").complete_file({
+    --             -- cmd = "rg --files",
+    --             winopts = { preview = { hidden = "nohidden" } }
+    --         })
+    --     end
+    -- },
+    
+    -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
+    -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
+    -- https://github.com/LazyVim/LazyVim/discussions/5152
+    {
+        "Saghen/blink.cmp",
+        opts = {
+            keymap = {
+                -- preset = "enter",
+                preset = "super-tab",
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+            },
+            -- maybe optional 
+            completion = { list = { selection = "auto_insert" } },
+        },
+    },
 }
