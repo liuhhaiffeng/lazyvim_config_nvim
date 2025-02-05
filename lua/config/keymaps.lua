@@ -31,7 +31,9 @@ map("n", "<leader><leader>w", "<Plug>(easymotion-w)", opts)
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- https://github.com/zivyangll/git-blame.vim
 -- map("n", "<leader><leader>ghB", ":<C-u>call gitblame#echo()<CR>", opts)
-map("n", "<leader>ghB", ":<C-u>call gitblame#echo()<CR>", opts)
+-- map("n", "<leader>ghB", ":<C-u>call gitblame#echo()<CR>", opts)
+-- ghB 和 lazyvim 内置的冲突了， ga 没有使用，可以用
+map("n", "<leader>ga", ":<C-u>call gitblame#echo()<CR>", opts)
 
 -- 由于目前对 nvim 还不熟悉, 因此将自定义的 vim 脚本函数添加到 git-blame 中来实现
 -- 加载
@@ -100,3 +102,9 @@ map("n", "<leader>/w", ":LeaderfLineCword<cr>", opts)
 
 map("n", "<c-p>", ":Leaderf --previous<cr>", opts)
 map("n", "<c-n>", ":Leaderf --next<cr>", opts)
+
+-- 注: 3次容易误按, 暂时先设置为4次
+-- nnoremap <esc><esc><esc> <c-w>b<c-w>q
+-- nnoremap <esc><esc><esc><esc> <c-w>b<c-w>q
+-- map("n", "<esc><esc><esc><esc>", "<c-w>b<c-w>q", opts)
+map("n", "<esc><esc><esc>", "<c-w>b<c-w>q", opts)

@@ -448,9 +448,65 @@ return {
                 preset = "super-tab",
                 ["<Tab>"] = { "select_next", "fallback" },
                 ["<S-Tab>"] = { "select_prev", "fallback" },
+                ['<C-y>'] = { 'select_and_accept' },
+
+
+                -- ~/.local/share/nvim/lazy/blink.cmp/lua/blink/cmp/keymap/presets.lua" 72
+                -- TODO::有空可以研究一下下面的原理
+                -- ['<Tab>'] = {
+                --     function(cmp)
+                --         if cmp.snippet_active() then
+                --             return cmp.accept()
+                --         else
+                --             return cmp.select_and_accept()
+                --         end
+                --     end,
+                --     'snippet_forward',
+                --     'fallback',
+                -- },
+                -- ['<S-Tab>'] = { 'snippet_backward', 'fallback' },
             },
             -- maybe optional 
-            completion = { list = { selection = "auto_insert" } },
+            -- blink.cmp 升级后，再次 nv 打开文件时报错：
+            --   blink.cmp utils.lua:28: completion.list.   selection: expected table, got string
+            -- 原因是这里对应的配置也要同步修改如下：
+            -- https://github.com/Saghen/blink.cmp/issues/948
+            -- completion = { list = { selection = "auto_insert" } },
+            completion = { 
+                -- list = { selection = { preselect = true, auto_insert = true } },
+                list = { selection = { preselect = false, auto_insert = true } },
+
+                -- https://cmp.saghen.dev/configuration/general.html
+                -- Disable auto brackets
+                -- NOTE: some LSPs may add auto brackets themselves anyway
+                accept = { auto_brackets = { enabled = false }, },
+            },
+
         },
     },
+
+    {
+        "folke/snacks.nvim",
+        ---@type snacks.Config
+        opts = {
+            indent = {
+                enabled = false, -- enable indent guides
+            }
+        }
+    },
+
+    {
+        "echasnovski/mini.pairs",
+        -- 参考： h mini.pars 中
+        -- MiniPairs.config = {
+        --     -- In which modes mappings from this `config` should be created
+        --     modes = { insert = true, command = false, terminal = false },
+        --  目的：命令模式下（如：输入命令时，“/” 搜索时，不需要“画蛇添足”的括号自动匹配
+        opts = {
+            -- In which modes mappings from this `config` should be created
+            modes = { insert = true, command = false, terminal = false },
+        }
+
+    },
+
 }

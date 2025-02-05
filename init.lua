@@ -32,9 +32,10 @@ local options = {
 -- https://teukka.tech/vimtip-gitlens.html
 -- 说明: 当前目录下的文件 git blame 不卡, 可是打开一个 git 项目, 就会很快, 原因未知
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
-vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
-vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
+-- 特别说明：此 git blame 导致 lazyvim 快速上下移动时严重卡顿，故暂时禁止
+-- vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
+-- vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
+-- vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
 
 -- hi! link GitLens Comment
 -- vim.cmd("hi! link GitLens Comment")
@@ -74,3 +75,21 @@ vim.cmd("let g:Lf_PreviewInPopup = 0")      -- vim8 scrip style
 vim.cmd("let g:Lf_UseVersionControlTool = 0")
 vim.cmd("let g:Lf_DefaultExternalTool = \"find\"")
 vim.cmd("let g:Lf_ExternalCommand = 'find \"%s\" -type f'")
+
+-- LazyVim is slow, Can I do something about it? #3427
+-- https://github.com/LazyVim/LazyVim/discussions/3427
+vim.cmd("let g:python_host_prog  = '/usr/bin/python2'")
+vim.cmd("let g:python3_host_prog = '/usr/bin/python3'")
+
+
+
+-- TODO: 为解决问题：
+--
+-- 1. 上下不卡顿
+-- nv ~/.local/share/nvim/lazy/fzf-lua/lua/fzf-lua/core.lua +34
+-- 2. 上下卡顿
+-- cd ~/.local/share/nvim/lazy/fzf-lua
+-- nv lua/fzf-lua/core.lua +34
+-- 3. 上下卡顿
+-- cd ~/.local/share/nvim/lazy/fzf-lua/lua/fzf-lua/
+-- nv core.lua +34

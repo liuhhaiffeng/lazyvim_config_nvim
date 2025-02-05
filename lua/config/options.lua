@@ -31,7 +31,7 @@ vim.api.nvim_command("filetype plugin indent on")
 
 -- 关闭鼠标
 -- lhf: lazyvim 打开鼠标操作感觉更加好用(像vscode)一样, 故禁止如下行
--- vim.opt.mouse = ""
+vim.opt.mouse = ""
 
 -- 默认搜索和替换大小写敏感
 vim.o.ignorecase = false
