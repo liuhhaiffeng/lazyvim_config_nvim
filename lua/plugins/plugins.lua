@@ -416,19 +416,22 @@ return {
         },
     },
 
-    {
-        "ibhagwan/fzf-lua",
-        -- optional for icon support
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            -- calling `setup` is optional for customization
-            -- require("fzf-lua").setup({})
-            require("fzf-lua").complete_file({
-                -- cmd = "rg --files",
-                winopts = { preview = { hidden = "nohidden" } }
-            })
-        end
-    },
+    -- lazyvim find file 目前默认使用 snacks, 暂将 fzf 禁止掉
+    -- 注意： 以后可能会用到，因此不要在 Lazyvim 界面中将其 插件 给 cleanup 掉
+    --
+    -- {
+    --     "ibhagwan/fzf-lua",
+    --     -- optional for icon support
+    --     dependencies = { "nvim-tree/nvim-web-devicons" },
+    --     config = function()
+    --         -- calling `setup` is optional for customization
+    --         -- require("fzf-lua").setup({})
+    --         require("fzf-lua").complete_file({
+    --             -- cmd = "rg --files",
+    --             winopts = { preview = { hidden = "nohidden" } }
+    --         })
+    --     end
+    -- },
     
     -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
     -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
@@ -486,8 +489,6 @@ return {
         priority = 1000,
         lazy = false,
         opts = {
-            -- enable indent guides
-            indent = { enabled = false },
             -- 查看帮助 :h snacks-picker
             picker = {
                 -- live = false,
@@ -500,7 +501,7 @@ return {
             bigfile = { enabled = true },
             dashboard = { enabled = true },
             explorer = { enabled = true },
-            indent = { enabled = true },
+            indent = { enabled = false },
             input = { enabled = true },
             picker = { enabled = true },
             notifier = { enabled = true },
