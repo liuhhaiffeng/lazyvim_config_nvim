@@ -147,3 +147,8 @@ vim.opt.foldtext = "foldtext()"
 -- lazyvim rootdir 默认识别为 /home/uxdb (注: :LazyRoot 查看), 导致查找等操作很慢,
 -- 显式将其设置为启动 nvim 时的"当前目录"
 vim.g.root_spec = { "cwd" }
+
+-- 基于 snacks-picker 的 “float 窗口”感觉不好用，想回到 telescope, 
+-- 无奈 git clone 总是失败，暂时先禁止掉
+-- vim.g.lazyvim_picker = "telescope"
+

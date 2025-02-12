@@ -53,3 +53,27 @@ vim.api.nvim_create_autocmd({ "FileType" }, {
     vim.wo.conceallevel = 0
   end,
 })
+
+
+-- ctrl + / 可以打开内置 terminal, 在其中，double <esc> 可以从 terminal 切换到
+-- normal 模式，这样就可以在 terminal 中使用按键上下滚动了，但默认设置有个问题：
+-- 从 terminal 中跳到其他 editor buffer 然后再跳回来，默认变成了 terminal 模式，
+-- 这个行为不符合我的习惯用法
+--
+-- snacks.terminal 默认行为如下：
+-- ~/.local/share/nvim/lazy/snacks.nvim/lua/snacks/terminal.lua
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   buffer = terminal.buf,
+--   callback = function()
+--     vim.cmd.startinsert()
+--   end,
+-- })
+--
+-- 目前不清楚如何在配置文件中修改，因此，直接在 snacks.terminal 源码中直接修改
+-- 修改如下：terminal BufEnter 去除 vim.cmd.startinsert
+-- vim.api.nvim_create_autocmd("BufEnter", {
+--   buffer = terminal.buf,
+--   callback = function()
+--     -- vim.cmd.startinsert()
+--   end,
+-- })

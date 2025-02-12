@@ -33,12 +33,8 @@ return {
     {
         "folke/noice.nvim",
         opts = {
-            cmdline = {
-                enabled = false,
-            },
-            messages = {
-                enabled = false,
-            },
+            cmdline = { enabled = false, },
+            messages = { enabled = false, },
         },
     },
 
@@ -420,19 +416,19 @@ return {
         },
     },
 
-    -- {
-    --     "ibhagwan/fzf-lua",
-    --     -- optional for icon support
-    --     dependencies = { "nvim-tree/nvim-web-devicons" },
-    --     config = function()
-    --         -- calling `setup` is optional for customization
-    --         -- require("fzf-lua").setup({})
-    --         require("fzf-lua").complete_file({
-    --             -- cmd = "rg --files",
-    --             winopts = { preview = { hidden = "nohidden" } }
-    --         })
-    --     end
-    -- },
+    {
+        "ibhagwan/fzf-lua",
+        -- optional for icon support
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function()
+            -- calling `setup` is optional for customization
+            -- require("fzf-lua").setup({})
+            require("fzf-lua").complete_file({
+                -- cmd = "rg --files",
+                winopts = { preview = { hidden = "nohidden" } }
+            })
+        end
+    },
     
     -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
     -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
@@ -487,12 +483,33 @@ return {
 
     {
         "folke/snacks.nvim",
-        ---@type snacks.Config
+        priority = 1000,
+        lazy = false,
         opts = {
-            indent = {
-                enabled = false, -- enable indent guides
-            }
-        }
+            -- enable indent guides
+            indent = { enabled = false },
+            -- 查看帮助 :h snacks-picker
+            picker = {
+                -- live = false,
+                -- layout = { fullscreen = true },
+                -- grep = { live = false },
+                -- lsp = { symbols = { live = false, }, },
+            },
+
+            -- It's a good idea to run :checkhealth snacks to see if everything is set up correctly.
+            bigfile = { enabled = true },
+            dashboard = { enabled = true },
+            explorer = { enabled = true },
+            indent = { enabled = true },
+            input = { enabled = true },
+            picker = { enabled = true },
+            notifier = { enabled = true },
+            quickfile = { enabled = true },
+            scope = { enabled = true },
+            scroll = { enabled = true },
+            statuscolumn = { enabled = true },
+            words = { enabled = true },
+        },
     },
 
     {
@@ -506,7 +523,6 @@ return {
             -- In which modes mappings from this `config` should be created
             modes = { insert = true, command = false, terminal = false },
         }
-
     },
 
 }

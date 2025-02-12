@@ -89,7 +89,8 @@ map("n",  "<leader>lR", ":Leaderf! gtags -r ", { noremap = true, silent = false 
 map("n", "<leader>lt", ":cclose<cr>:LeaderfTag<CR>", opts)
 -- # 使用 gtags 来查找符号
 -- nnoremap <leader>lT :cclose<cr>:Leaderf gtags<cr>
-map("n", "<leader>T", ":cclose<cr>:LeaderfTag<CR>", opts)
+-- map("n", "<leader>T", ":cclose<cr>:LeaderfTag<CR>", opts)
+map("n", "<leader>T", ":cclose<cr>:Leaderf gtags<CR>", opts)
 
 -- # Leaderf 查看当前文件函数列表快捷键
 -- # 查看函数列表时，如果copen打开，那么将其关闭
@@ -108,3 +109,15 @@ map("n", "<c-n>", ":Leaderf --next<cr>", opts)
 -- nnoremap <esc><esc><esc><esc> <c-w>b<c-w>q
 -- map("n", "<esc><esc><esc><esc>", "<c-w>b<c-w>q", opts)
 map("n", "<esc><esc><esc>", "<c-w>b<c-w>q", opts)
+
+-- # 更新 ~/.LfCache/gtags
+-- # 更多详情 vim 中查看帮助  :h g:Lf_Gtags
+-- # mygl 中我启用了 ctags -R * 后, 执行下面命令时, 会报如下警告:
+-- # ctags: Warning: ignoring null tag in ./scws-1.2.3/etc/rules.ini(line: 65)
+-- # 暂解决如下: 将输出的警告给吃掉, 即使其不要显示到界面上来解决
+-- # nnoremap <silent><leader>up :!bash mygl<cr>:Leaderf gtags --update<cr>
+-- # :Leaderf gtags --update 会导致 gtags 一直 CPU 100%, 原因未知, 暂时将其禁止
+-- # nnoremap <silent><leader>up :!bash mygl 1> /dev/null<cr>:Leaderf gtags --update<cr>
+-- # 注: Leaderf 后面加了 ! 后, 好像 gtags 不 CPU 100 了
+-- nnoremap <silent><leader>up :!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>
+map("n", "<leader>lup", ":!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>", opts)
