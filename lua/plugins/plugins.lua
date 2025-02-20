@@ -95,14 +95,15 @@ return {
         table.insert(opts.sections.lualine_y, "%L")   -- 显示总行数
         table.insert(opts.sections.lualine_y, "selectioncount")
         -- table.insert(opts.sections.lualine_y, "diagnostics")    -- 左侧默认已经有了，这里就不冗余添加了
+        table.remove(opts.sections.lualine_z)  -- 去除 时间显示
 
         -- 某些场景下，我需要显示 full path， 通过此设定
         -- 参考：https://github.com/LazyVim/LazyVim/discussions/3010
         -- 参考2： ~/.local/share/nvim/lazy/lualine.nvim/doc/lualine.txt 736
-        table.insert(opts.sections.lualine_c, {
-            "filename",
-            path = 3,
-        })
+        -- table.insert(opts.sections.lualine_c, {
+        --     "filename",
+        --     path = 3,
+        -- })
   end,
   },
 
@@ -495,6 +496,14 @@ return {
                 -- layout = { fullscreen = true },
                 -- grep = { live = false },
                 -- lsp = { symbols = { live = false, }, },
+                layout = {
+                    box = "horizontal", 
+                    cycle = true,
+                    preset = function()
+                        -- return vim.o.columns >= 120 and "default" or "vertical"
+                        return "horizontal"
+                    end,
+                },
             },
 
             -- It's a good idea to run :checkhealth snacks to see if everything is set up correctly.
@@ -510,6 +519,7 @@ return {
             scroll = { enabled = true },
             statuscolumn = { enabled = true },
             words = { enabled = true },
+            terminal = { auto_insert = false },
         },
     },
 
