@@ -94,6 +94,36 @@ vim.cmd("let g:python3_host_prog = '/usr/bin/python3'")
 -- cd ~/.local/share/nvim/lazy/fzf-lua/lua/fzf-lua/
 -- nv core.lua +34
 
+local function is_fake_func_name(line)
+    -- 过滤 伪函数名称, 如:
+    -- if ()
+    -- else ()
+    -- while ()
+    -- do ()
+    local fake_func_names = {
+        "if",
+        "else",
+        "switch",
+        "case",
+        "default",
+        "for",
+        "while",
+        "do",
+        "break",
+        "continue",
+        "goto",
+    }
+
+    local is_fake = false
+    for _, str in ipairs(fake_func_names) do
+        if str == line then
+            is_fake = true
+            break
+        end
+    end
+
+    return is_fake
+end
 
 
 local function get_current_function_info()
@@ -115,14 +145,21 @@ local function get_current_function_info()
         --    ShutdownXLOG(int code, Datum arg) {
         -- 因此, 目前暂使用 ".*" 来泛匹配吧
         -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
-        local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+        -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+        -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
+        local match2 = line_content:match("([%w_])+%s*%(.*%)%s*%{")
         if match1 or match2 then
-            if (match2) then
+            if is_fake_func_name(match2) then
+                goto fake_continue
+            else
+                -- 对于 match2 情况, 微调一下 start_line
                 start_line = start_line + 1
             end
             -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
             break
         end
+
+        ::fake_continue::
         start_line = start_line - 1
     end
 
@@ -223,14 +260,23 @@ local function move_to_cxx_function_start()
         --    ShutdownXLOG(int code, Datum arg) {
         -- 因此, 目前暂使用 ".*" 来泛匹配吧
         -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
-        local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+        -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+        -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
+        local match2 = line_content:match("([%w_])+%s*%(.*%)%s*%{")
         if match1 or match2 then
             if (match2) then
-                start_line = start_line + 1
+                if is_fake_func_name(match2) then
+                    goto fake_continue
+                else
+                    -- 对于 match2 情况, 微调一下 start_line
+                    start_line = start_line + 1
+                end
             end
             -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
             break
         end
+
+        ::fake_continue::
         start_line = start_line - 1
     end
 
