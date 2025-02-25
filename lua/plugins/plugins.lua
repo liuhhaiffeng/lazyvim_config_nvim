@@ -536,4 +536,15 @@ return {
         }
     },
 
+    {
+        "folke/ts-comments.nvim",
+        event = "VeryLazy",
+        opts = {
+            lang = {
+                c = "/* %s */",
+                cpp = "/* %s */"
+            },
+        },
+    },
+
 }
