@@ -139,12 +139,33 @@ local function get_current_function_info()
         local line_content = lines[i]
         -- 匹配函数定义行（简化版正则表达式）
 
+        -- case 1
         -- 仅仅返回函数名称
+        -- 举例:
+        --   DWORD VDSViewer::ConnectTranThread(int i, int j)
+        --   match 为 ConnectTranThread
         -- local match = line_content:match("([%w_]+)%s*%(.*")
-        -- 返回函数名称所在行
+
+        -- case 2
+        -- 返回函数名称及后面的所有内容
+        -- 举例:
+        --   DWORD VDSViewer::ConnectTranThread(int i, int j)
+        --   match 为 ConnectTranThread(int i, int j)
         local match = line_content:match("[%w_]+%s*%(.*")
         if match then
-            function_name = match
+            -- case 1
+            -- 获取函数名称匹配的类容
+            -- 举例:
+            --   DWORD VDSViewer::ConnectTranThread()
+            --   match 为 ConnectTranThread()
+            -- function_name = match
+
+            -- case 2
+            -- 返回函数名称所在行(全部内容)
+            -- 举例:
+            --   DWORD VDSViewer::ConnectTranThread()
+            --   line_content 为 DWORD VDSViewer::ConnectTranThread()
+            function_name = line_content
             -- print(string.format("function_name(%s)", function_name))
             break
         end
@@ -179,7 +200,7 @@ local function get_current_function_info()
     end
 
     -- 显示结果
-    vim.notify(string.format("Function Name: %s\nFunction Lines: %d\nPercentage: %d\n", function_name, function_lines, percent), vim.log.levels.INFO)
+    -- vim.notify(string.format("Function Name: %s\nFunction Lines: %d\nPercentage: %d\n", function_name, function_lines, percent), vim.log.levels.INFO)
     print(string.format("%s %d %d%%", function_name, function_lines, percent))
 end
 
