@@ -516,7 +516,11 @@ return {
             notifier = { enabled = true },
             quickfile = { enabled = true },
             scope = { enabled = true },
-            scroll = { enabled = true },
+            -- 打开 man(k, kzz) 功能后, 再加上 lazyvim 的 smooth scroll 开启后,
+            -- 连续 k 或 j 滚动, lazyvim 就会很卡, 因此暂时将 smooth scroll 功能
+            -- 关闭
+            -- https://github.com/LazyVim/LazyVim/discussions/5073
+            scroll = { enabled = false },
             statuscolumn = { enabled = true },
             words = { enabled = true },
             terminal = { auto_insert = false },
