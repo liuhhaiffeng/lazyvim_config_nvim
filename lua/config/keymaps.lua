@@ -13,6 +13,8 @@ local opts = { noremap = true, silent = true }
 -- map("n", "<C-u>", "9k", opts)
 -- map("n", "<C-d>", "9j", opts)
 
+-- 最新 lazyvim 中启用了一个“平滑滚动”的功能，此功能开启后，下面的映射，会导致
+-- 连续上或下滚动时卡顿，故现暂将此功能禁止
 map("n", "k", "kzz", opts)
 map("n", "j", "jzz", opts)
 
