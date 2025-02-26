@@ -22,6 +22,16 @@ vim.cmd("set noswapfile")
 -- vim.cmd('setlocal nolist')
 vim.cmd("set nolist")
 
+-- # 参考： http://blog.itpub.net/267265/viewspace-2214837/
+-- # 键入命令时，可以模糊匹配，有时候比 Ctrl-D 方便一些，使用 Tab和 Shift-Tab来进行选择
+-- set wildmenu
+-- # 此配置可以自动触发类似 Ctrl-D 预览的功能，这时候按下 Tab 键，就可以自动选择了
+-- set wildmode=longest:list,full
+-- lhf note: lazyvim 当前最新版, 命令补全预览窗口是"垂直的,并且还需要手动 ctrl-p/n 上线滚动",
+--           不够直观, 下面的设置, 可以尽可能将补全内容全部展示出来, 更加好用
+vim.cmd("set wildmenu")
+vim.cmd("set wildmode=longest:list,full")
+
 -- https://manujsdev.com/blog/config-nvim-with-lua-colorscheme
 require("config.colorscheme")
 local options = {
