@@ -414,20 +414,34 @@ return {
 
     -- lazyvim find file 目前默认使用 snacks, 暂将 fzf 禁止掉
     -- 注意： 以后可能会用到，因此不要在 Lazyvim 界面中将其 插件 给 cleanup 掉
-    --
-    -- {
-    --     "ibhagwan/fzf-lua",
-    --     -- optional for icon support
-    --     dependencies = { "nvim-tree/nvim-web-devicons" },
-    --     config = function()
-    --         -- calling `setup` is optional for customization
-    --         -- require("fzf-lua").setup({})
-    --         require("fzf-lua").complete_file({
-    --             -- cmd = "rg --files",
-    --             winopts = { preview = { hidden = "nohidden" } }
-    --         })
-    --     end
-    -- },
+    -- 注意2: fzf 等 picker 的启用, 还需要额外设置, 比如我在 options.lua 
+    --        中需要显示设置, 才能生效
+    --        vim.g.lazyvim_picker = "fzf" 
+    {
+        "ibhagwan/fzf-lua",
+        -- optional for icon support
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        -- FZF: How to change the layout to horizontal?
+        -- https://github.com/LazyVim/LazyVim/discussions/3815
+        opts = function(_, opts)
+            opts.winopts = {
+                preview = {
+                    vertical = "up:65%",
+                    layout = "vertical",
+                    hidden = "nohidden"
+                },
+            }
+        end,
+        -- 上面 opts 重复配置了, 下面的 config 就冗余了, 暂禁止
+        -- config = function()
+        --     -- calling `setup` is optional for customization
+        --     -- require("fzf-lua").setup({})
+        --     require("fzf-lua").complete_file({
+        --         -- cmd = "rg --files",
+        --         winopts = { preview = { hidden = "nohidden" } }
+        --     })
+        -- end
+    },
     
     -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
     -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
