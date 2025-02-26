@@ -123,3 +123,15 @@ map("n", "<esc><esc><esc>", "<c-w>b<c-w>q", opts)
 -- # 注: Leaderf 后面加了 ! 后, 好像 gtags 不 CPU 100 了
 -- nnoremap <silent><leader>up :!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>
 map("n", "<leader>lup", ":!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>", opts)
+
+map("n", "<leader>bm", ":e ~/bm<CR>", opts)
+map("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
+map("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
+map("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
+map("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
+map("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
+map("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
+map("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
+map("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
+map("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
+map("n", "<leader>$", ":BufferLineGoToBuffer -1<CR>", opts)
