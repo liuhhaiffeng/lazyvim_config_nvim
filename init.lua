@@ -162,6 +162,10 @@ local function get_current_function_info()
     local start_line = current_line
     while start_line >= 0 do
         local line_content = lines[start_line + 1]
+        -- 出现当前行是最后一行情况
+        if not line_content then
+            break
+        end
         -- if line_content:match("%f[^%s]}%s*{") then
         local match1 = line_content:match("^%{%s*")
         -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如: 
@@ -249,8 +253,12 @@ local function get_current_function_info()
         end_line = end_line + 1
     end
 
+    -- print(string.format("end_line(%d), #lines(%d)", end_line, #lines))
     -- 检查是否找到了函数的结束位置
-    if end_line >= #lines then
+    -- if end_line >= #lines then
+    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
+    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
+    if end_line > #lines then
         vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
         return
     end
@@ -265,7 +273,7 @@ local function get_current_function_info()
 
     -- 显示结果
     -- vim.notify(string.format("Function Name: %s\nFunction Lines: %d\nPercentage: %d\n", function_name, function_lines, percent), vim.log.levels.INFO)
-    print(string.format("%s %d %d%%", function_name, function_lines, percent))
+    print(string.format("%s %d %d%% (start_line %d)", function_name, function_lines, percent, start_line))
 end
 
 local function move_to_cxx_function_start()
@@ -281,6 +289,10 @@ local function move_to_cxx_function_start()
     local start_line = current_line
     while start_line >= 0 do
         local line_content = lines[start_line + 1]
+        -- 出现当前行是最后一行情况
+        if not line_content then
+            break
+        end
         -- if line_content:match("%f[^%s]}%s*{") then
         local match1 = line_content:match("^%{%s*")
         -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如: 
@@ -342,7 +354,10 @@ local function move_to_cxx_function_end()
     end
 
     -- 检查是否找到了函数的结束位置
-    if end_line >= #lines then
+    -- if end_line >= #lines then
+    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
+    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
+    if end_line > #lines then
         vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
         return
     end
