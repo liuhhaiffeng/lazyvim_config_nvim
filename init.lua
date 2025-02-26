@@ -147,7 +147,7 @@ local function get_current_function_info()
         -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
         -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
         -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
-        local match2 = line_content:match("([%w_])+%s*%(.*%)%s*%{")
+        local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
         if match1 or match2 then
             if is_fake_func_name(match2) then
                 goto fake_continue
@@ -262,7 +262,7 @@ local function move_to_cxx_function_start()
         -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
         -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
         -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
-        local match2 = line_content:match("([%w_])+%s*%(.*%)%s*%{")
+        local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
         if match1 or match2 then
             if (match2) then
                 if is_fake_func_name(match2) then
