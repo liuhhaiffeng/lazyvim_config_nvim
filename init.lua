@@ -148,55 +148,87 @@ local function is_fake_func_para(para)
     return is_fake
 end
 
-
-local function get_current_function_info()
-    -- 获取当前缓冲区的所有行
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    -- 当前光标位置
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    -- local current_line = cursor[1] - 1 -- 行号从 0 开始
-    local current_line = cursor[1] -- 行号从 1 开始
-
-    -- 查找函数的起始位置（向后查找第一个 '{'）
+local function get_start_line(lines, current_line)
+    -- 查找函数的起始位置（向上查找第一个 '{'）
     local start_line = current_line
-    while start_line >= 0 do
-        local line_content = lines[start_line + 1]
-        -- 出现当前行是最后一行情况
-        if not line_content then
-            break
-        end
+    while start_line > 0 do
+        local line_content = lines[start_line]
         -- if line_content:match("%f[^%s]}%s*{") then
         local match1 = line_content:match("^%{%s*")
         -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如: 
         --    ShutdownXLOG(int code, Datum arg) {
-        -- 因此, 目前暂使用 ".*" 来泛匹配吧
-        -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
-        -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
-        -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
-        local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
-        local para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
-        -- print("para = ", para, "match2 = ", match2)
-        if match1 or match2 then
-            if (match2) then
-                if is_fake_func_name(match2) or is_fake_func_para(para) then
-                    goto fake_continue
-                else
-                    -- 对于 match2 情况, 微调一下 start_line
-                    start_line = start_line + 1
+            -- 因此, 目前暂使用 ".*" 来泛匹配吧
+            -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
+            -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+            -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
+            local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
+            local match2_func_para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
+            -- print("para = ", para, "match2 = ", match2)
+            if match1 or match2 then
+                if (match2) then
+                    if is_fake_func_name(match2) or is_fake_func_para(match2_func_para) then
+                        goto fake_continue
+                    end
                 end
+                -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
+                break
             end
-            -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
-            break
+
+            ::fake_continue::
+            start_line = start_line - 1
         end
 
-        ::fake_continue::
-        start_line = start_line - 1
+        -- 检查是否找到了函数的起始位置
+        if start_line <= 0 then
+            vim.notify("Cursor is not inside a function.", vim.log.levels.WARN)
+            return
+        end
+
+        return start_line
+end
+
+local function get_end_line(lines, current_line)
+    -- 查找函数的结束位置（向前查找第一个 '}'）
+    local end_line = current_line
+    while end_line <= #lines do
+        -- local line_content = lines[end_line + 1]
+        local line_content = lines[end_line]
+        -- 注: gmatch 会导致结果不正确
+        -- if line_content:gmatch("^%}%s*") then
+        if line_content:match("^%}%s*") then
+            -- print(string.format("end_line(%d), #lines(%d), line_content(%s)", end_line, #lines, line_content))
+            break
+        end
+        end_line = end_line + 1
     end
 
-    -- 检查是否找到了函数的起始位置
-    if start_line < 0 then
-        vim.notify("Cursor is not inside a function.", vim.log.levels.WARN)
+    -- print(string.format("end_line(%d), #lines(%d)", end_line, #lines))
+    -- 检查是否找到了函数的结束位置
+    -- if end_line >= #lines then
+    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
+    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
+    if end_line > #lines then
+        vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
+        return
+    end
+
+    return end_line
+end
+
+local function get_current_function_info()
+    -- 获取当前缓冲区的所有行
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    -- 当前光标位置                                 
+    local cursor = vim.api.nvim_win_get_cursor(0)
+    local current_line = cursor[1] -- 行号从 1 开始
+
+    local start_line = get_start_line(lines, current_line)
+    if not start_line then
+        return
+    end
+
+    local end_line = get_end_line(lines, current_line)
+    if not end_line then
         return
     end
 
@@ -239,30 +271,6 @@ local function get_current_function_info()
         end
     end
 
-    -- 查找函数的结束位置（向前查找第一个 '}'）
-    local end_line = current_line
-    while end_line < #lines do
-        -- local line_content = lines[end_line + 1]
-        local line_content = lines[end_line]
-        -- 注: gmatch 会导致结果不正确
-        -- if line_content:gmatch("^%}%s*") then
-        if line_content:match("^%}%s*") then
-            -- print(string.format("end_line(%d), #lines(%d), line_content(%s)", end_line, #lines, line_content))
-            break
-        end
-        end_line = end_line + 1
-    end
-
-    -- print(string.format("end_line(%d), #lines(%d)", end_line, #lines))
-    -- 检查是否找到了函数的结束位置
-    -- if end_line >= #lines then
-    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
-    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
-    if end_line > #lines then
-        vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
-        return
-    end
-
     -- 计算函数的行数
     local function_lines = end_line - start_line + 1
 
@@ -279,51 +287,12 @@ end
 local function move_to_cxx_function_start()
     -- 获取当前缓冲区的所有行
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    -- 当前光标位置
+    -- 当前光标位置                                 
     local cursor = vim.api.nvim_win_get_cursor(0)
-    -- local current_line = cursor[1] - 1 -- 行号从 0 开始
     local current_line = cursor[1] -- 行号从 1 开始
 
-    -- 查找函数的起始位置（向后查找第一个 '{'）
-    local start_line = current_line
-    while start_line >= 0 do
-        local line_content = lines[start_line + 1]
-        -- 出现当前行是最后一行情况
-        if not line_content then
-            break
-        end
-        -- if line_content:match("%f[^%s]}%s*{") then
-        local match1 = line_content:match("^%{%s*")
-        -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如: 
-        --    ShutdownXLOG(int code, Datum arg) {
-        -- 因此, 目前暂使用 ".*" 来泛匹配吧
-        -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
-        -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
-        -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
-        local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
-        local para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
-        -- print("para = ", para, "match2 = ", match2)
-        if match1 or match2 then
-            if (match2) then
-                if is_fake_func_name(match2) or is_fake_func_para(para) then
-                    goto fake_continue
-                else
-                    -- 对于 match2 情况, 微调一下 start_line
-                    start_line = start_line + 1
-                end
-            end
-            -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
-            break
-        end
-
-        ::fake_continue::
-        start_line = start_line - 1
-    end
-
-    -- 检查是否找到了函数的起始位置
-    if start_line < 0 then
-        vim.notify("Cursor is not inside a function.", vim.log.levels.WARN)
+    local start_line = get_start_line(lines, current_line)
+    if not start_line then
         return
     end
 
@@ -333,32 +302,12 @@ end
 local function move_to_cxx_function_end()
     -- 获取当前缓冲区的所有行
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    -- 当前光标位置
+    -- 当前光标位置                                 
     local cursor = vim.api.nvim_win_get_cursor(0)
-    -- local current_line = cursor[1] - 1 -- 行号从 0 开始
     local current_line = cursor[1] -- 行号从 1 开始
 
-    -- 查找函数的结束位置（向前查找第一个 '}'）
-    local end_line = current_line
-    while end_line < #lines do
-        -- local line_content = lines[end_line + 1]
-        local line_content = lines[end_line]
-        -- 注: gmatch 会导致结果不正确
-        -- if line_content:gmatch("^%}%s*") then
-        if line_content:match("^%}%s*") then
-            -- print(string.format("end_line(%d), #lines(%d), line_content(%s)", end_line, #lines, line_content))
-            break
-        end
-        end_line = end_line + 1
-    end
-
-    -- 检查是否找到了函数的结束位置
-    -- if end_line >= #lines then
-    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
-    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
-    if end_line > #lines then
-        vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
+    local end_line = get_end_line(lines, current_line)
+    if not end_line then
         return
     end
 
