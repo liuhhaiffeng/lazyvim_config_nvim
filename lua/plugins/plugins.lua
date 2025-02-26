@@ -563,4 +563,8 @@ return {
         end,
     },
 
+    {
+        "vim-scripts/TagHighlight",
+    },
+
 }
