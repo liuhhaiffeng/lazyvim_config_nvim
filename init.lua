@@ -100,6 +100,7 @@ local function is_fake_func_name(line)
     -- else ()
     -- while ()
     -- do ()
+    -- std::thread([this]() { })
     local fake_func_names = {
         "if",
         "else",
@@ -112,11 +113,33 @@ local function is_fake_func_name(line)
         "break",
         "continue",
         "goto",
+        "thread",
     }
 
     local is_fake = false
     for _, str in ipairs(fake_func_names) do
         if str == line then
+            is_fake = true
+            break
+        end
+    end
+
+    return is_fake
+end
+
+local function is_fake_func_para(para)
+    -- 过滤 伪函数参数, 如:
+    -- std::thread([this]() { 
+    -- })
+    local fake_func_paras = {
+        "%[",    -- 正则匹配时, 对于 [ ]  关键词, 需要使用 % 进行转义
+        "%]",
+    }
+
+    local is_fake = false
+    for _, str in ipairs(fake_func_paras) do
+        local match = para:match(str)
+        if match then
             is_fake = true
             break
         end
@@ -148,12 +171,16 @@ local function get_current_function_info()
         -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
         -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
         local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
+        local para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
+        -- print("para = ", para, "match2 = ", match2)
         if match1 or match2 then
-            if is_fake_func_name(match2) then
-                goto fake_continue
-            else
-                -- 对于 match2 情况, 微调一下 start_line
-                start_line = start_line + 1
+            if (match2) then
+                if is_fake_func_name(match2) or is_fake_func_para(para) then
+                    goto fake_continue
+                else
+                    -- 对于 match2 情况, 微调一下 start_line
+                    start_line = start_line + 1
+                end
             end
             -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
             break
@@ -263,9 +290,11 @@ local function move_to_cxx_function_start()
         -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
         -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
         local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
+        local para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
+        -- print("para = ", para, "match2 = ", match2)
         if match1 or match2 then
             if (match2) then
-                if is_fake_func_name(match2) then
+                if is_fake_func_name(match2) or is_fake_func_para(para) then
                     goto fake_continue
                 else
                     -- 对于 match2 情况, 微调一下 start_line
