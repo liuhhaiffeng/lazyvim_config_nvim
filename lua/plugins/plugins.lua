@@ -366,7 +366,34 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       autoformat = false,
+      -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
+      -- 参考： /home/haifeng/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
+      diagnostics = {
+          virtual_text = false,
+          signs = false,
+          underline = false,
+      },
+      -- CXX 下不习惯 inlay_hints， 禁止掉
+      inlay_hints = { enabled = false },
     },
+    init = function()
+        local keys = require("lazyvim.plugins.lsp.keymaps").get()
+        -- lsp.keymaps 增加 items 示例
+        -- keys[#keys + 1] = { "[[", vim.diagnostic.open_float, mode = "n" }
+        -- keys[#keys + 1] = { "]]", vim.diagnostic.open_float, mode = "n" }
+        
+        -- 删除插件中对下面 按键 绑定, 使之恢复到默认的行为
+        local keysToRemove = { "[[", "]]" }
+        for i = #keys, 1, -1 do
+            local value = keys[i][1]
+            for _, str in ipairs(keysToRemove) do
+                if value == str then
+                    table.remove(keys, i)
+                    break
+                end
+            end
+        end
+    end,
   },
 
     -- cxx 文件中, 下面的 else 后单独一行的大括号使用 == 无法自动对齐, 发现此为
@@ -388,27 +415,6 @@ return {
             indent = { enable = false },
             -- 禁止指定类型(如: cxx 系列)
             -- indent = { disable = { "c", "cpp", "cxx", "C", "objc", "duda", "proto", "h", "hpp", "hxx" } },
-        },
-    },
-
-    -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
-    {
-        "nvim-lspconfig",
-        opts = {
-            -- 参考： /home/haifeng/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
-            diagnostics = {
-                virtual_text = false,
-                signs = false,
-                underline = false,
-            },
-        },
-    },
-
-    -- CXX 下不习惯 inlay_hints， 禁止掉
-    {
-        "neovim/nvim-lspconfig",
-        opts = {
-            inlay_hints = { enabled = false },
         },
     },
 
@@ -560,25 +566,38 @@ return {
         },
     },
 
-    {
-        "Yggdroot/LeaderF",
-        config = function()
-            -- 取消默认快捷键映射
-            local function unmap_leaderf_shortcuts()
-                -- 方法1  实测不生效, 原因未知
-                -- vim.g.Lf_ShortcutF = ''
-                -- vim.g.Lf_ShortcutB = ''
-
-                -- 方法2
-                vim.keymap.del("n", "<leader>f")
-                vim.keymap.del("n", "<leader>b")
-            end
-            unmap_leaderf_shortcuts()
-        end,
-    },
+    -- {
+    --     "Yggdroot/LeaderF",
+    --     config = function()
+    --         -- 取消默认快捷键映射
+    --         local function unmap_leaderf_shortcuts()
+    --             -- 方法1  实测不生效, 原因未知
+    --             -- vim.g.Lf_ShortcutF = ''
+    --             -- vim.g.Lf_ShortcutB = ''
+    --
+    --             -- 方法2
+    --             vim.keymap.del("n", "<leader>f")
+    --             vim.keymap.del("n", "<leader>b")
+    --         end
+    --         unmap_leaderf_shortcuts()
+    --     end,
+    -- },
 
     {
         "vim-scripts/TagHighlight",
     },
+
+    -- {
+    --     "LazyVim/LazyVim",
+    --     opts = {
+    --
+    --     },
+    --     keys = {
+    --     { "]]", function() Snacks.words.jump(vim.v.count1) end,  desc = "Next Reference xx" },
+    --     { "[[", function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference"  },
+    --     -- { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference xx", mode = { "n", "t" } },
+    --     -- { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+    --     },
+    -- },
 
 }
