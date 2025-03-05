@@ -63,13 +63,14 @@ map("n", "<F10>", "zo", opts)
 -- 注意: <m-n> <m-p> 也被 lazyvim 默认映射为 函数内当前 word 的遍历查找
 --
 -- <s-n> <s-p> 试了一下未被使用, 后续可以作为他用
-map("n", "<c-n>", ":cn<CR>", opts)
-map("n", "<c-p>", ":cp<CR>", opts)
-
+--
+-- 最后选用 ctrl-alt-n ctrl-alt-p 感觉最好
+map("n", "<c-m-n>", ":cn<CR>", opts)
+map("n", "<c-m-p>", ":cp<CR>", opts)
 
 -- 注意: 这里要求命令字符串要在状态栏进行"回显", silent 要设置为 false
--- map("n", "<leader>lG", ":cclose<cr>:Leaderf! rg -g !tags -g !*.taghl -s \"", { noremap = true, silent = false })
-map("n", "<leader>G", ":cclose<cr>:Leaderf! rg -g !tags -g !*.taghl -s \"", { noremap = true, silent = false })
+map("n", "<leader>G", ":Leaderf! rg -g !tags -g !*.taghl -s \"", { noremap = true, silent = false })
+
 -- # 注： 使用下面连续多次搜索，偶现搜索结果“追加问题“， 原因未知？
 map("n", "<leader>lg", ":<C-U><C-R>=printf(\"Leaderf! rg -g !tags -g !*.taghl --no-ignore -w -s -F %s \", expand(\"<cword>\"))<CR><CR>", opts)
 map("n", "<leader>lo", ":<C-U><C-R>=printf(\"Leaderf! rg --recall %s\", \"\")<CR><CR>", opts)
@@ -78,27 +79,25 @@ map("n", "<leader>lo", ":<C-U><C-R>=printf(\"Leaderf! rg --recall %s\", \"\")<CR
 -- # 此导致 <leader>f 反应慢， 原因是当前键入 <leader>f 后， vim
 -- # 不知道我是要立即结束, 还是要输入 fx 其他命令，因此会等待一段时间，
 -- # 为了解决此问题， 使用两个字母命令
--- map("n", "<leader>lP", ":cclose<cr>:LeaderfFile<cr>", opts)
-map("n", "<leader>P", ":cclose<cr>:LeaderfFile<cr>", opts)
+map("n", "<leader>P", ":LeaderfFile<cr>", opts)
 
-map("n" , "<leader>lr", ":cclose<CR>:<C-U><C-R>=printf(\"Leaderf! gtags -r %s --auto-jump\", expand(\"<cword>\"))<CR><CR>", opts);
+map("n" , "<leader>lr", ":<C-U><C-R>=printf(\"Leaderf! gtags -r %s --auto-jump\", expand(\"<cword>\"))<CR><CR>", opts);
 map("n",  "<leader>lR", ":Leaderf! gtags -r ", { noremap = true, silent = false })
 
 -- # 注意：若要执行两次命令，两个命令之间不要有空格，否则：首次打开vi时，执行
 -- # 命令，仅能执行前一条，无法执行后一条，原因：就是两个命令中间不紧凑，
--- # 有空格,  错误的写法：noremap <leader>ft :cclose<cr> :Leaderf gtags<cr>
 -- # 使用 ctags 来查找符号
-map("n", "<leader>lt", ":cclose<cr>:LeaderfTag<CR>", opts)
+map("n", "<leader>lt", ":LeaderfTag<CR>", opts)
 -- # 使用 gtags 来查找符号
--- nnoremap <leader>lT :cclose<cr>:Leaderf gtags<cr>
--- map("n", "<leader>T", ":cclose<cr>:LeaderfTag<CR>", opts)
-map("n", "<leader>T", ":cclose<cr>:Leaderf gtags<CR>", opts)
+-- nnoremap <leader>lT :Leaderf gtags<cr>
+-- map("n", "<leader>T", ":LeaderfTag<CR>", opts)
+map("n", "<leader>T", ":Leaderf gtags<CR>", opts)
 
 -- # Leaderf 查看当前文件函数列表快捷键
 -- # 查看函数列表时，如果copen打开，那么将其关闭
 -- # mz 记录当前光标位置，以便能够返回
--- map("n", "<leader>lf", "mz :cclose<cr>:LeaderfFunction!<cr>", opts)
-map("n", "<leader>F", "mz :cclose<cr>:LeaderfFunction!<cr>", opts)
+-- map("n", "<leader>lf", "mz :LeaderfFunction!<cr>", opts)
+map("n", "<leader>F", "mz :LeaderfFunction!<cr>", opts)
 
 map("n", "<leader>/", ":LeaderfLine<cr>", opts)
 map("n", "<leader>/w", ":LeaderfLineCword<cr>", opts)
