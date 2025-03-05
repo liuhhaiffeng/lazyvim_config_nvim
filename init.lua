@@ -43,9 +43,9 @@ local options = {
 -- 说明: 当前目录下的文件 git blame 不卡, 可是打开一个 git 项目, 就会很快, 原因未知
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- 特别说明：此 git blame 导致 lazyvim 快速上下移动时严重卡顿，故暂时禁止
--- vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
--- vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
--- vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
+vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
+vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
+vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
 
 -- hi! link GitLens Comment
 -- vim.cmd("hi! link GitLens Comment")
@@ -139,11 +139,47 @@ end
 
 local function is_fake_func_para(para)
     -- 过滤 伪函数参数, 如:
+    --
+    -- case1:
     -- std::thread([this]() { 
     -- })
+    --  例外: int main(int argc, char *argv[]) {
+    -- 解决: 对于 thread([]) 情况, 在上述 is_fake_func_name() 中通过 thread 关键词已经
+    --       过滤, 这里就去除 [ 和 ], 避免误判 char *argv[] 这种情况
+    --
+    -- 违例, 需要注释:
+    -- "%[",    -- 正则匹配时, 对于 [ ]  关键词, 需要使用 % 进行转义
+    -- 违例, 需要注释:
+    -- "%]",
+    --
+    -- case2:
+    -- FB_UPDATE_PENDING(cl) && !sraRgnEmpty(cl->requestedRegion)) {
+    --   说明: 上述表达式匹配到的 () 中的参数为:  cl) && !sraRgnEmpty(cl->requestedRegion)
+    --         因此, 里面的 ! -> 可作为过滤项目, 另外再增加一个 . 号(即: cl.requestedRegion)
+    --
+    --  TODO: 
+    --  虽然下面列举了如此多的场景, 但 C++ 函数默认参数一出场, 就将好多破掉了, 举例:
+    --  void func(bool i = (j == 5 ? false : true))
+    --  void func(bool i = ( j & k ?) false : true))
+    --  void func(bool i = (j >= 0 ?) false : true))
+    --  void func(book i = ( (j << 2) != 0 ?) false : true))
+    --  ....
+    --  感觉, C++ 的默认参数几乎可以将下面过滤规则给破掉, 但是有如下乐观想法:
+    --    1. C++ 上述默认参数一般在 "声明"中, 不体现在定义中
+    --    2. 这样的情况毕竟少数吧, 暂时不管了
     local fake_func_paras = {
-        "%[",    -- 正则匹配时, 对于 [ ]  关键词, 需要使用 % 进行转义
-        "%]",
+        "!",     -- 注: 测试发现 !  和  %! 均能生效
+        "%->",    -- 注: 测试发现 -> 和 %-> 均能生效
+        "%.",    -- 函数参数中不应该有 . 号
+        "%+",     -- 函数参数中不应该有 + 号吧?
+        "<=",    -- <= 不应该有
+        ">=",    -- >= 不应该有
+        "||",
+        "&&",
+        "==",    -- 函数参数中不应该有 == 号 (注: 单个 = 是有可能的, 如 C++ 参数默认值)
+        "!=", "%+=", "%-=", "%*=", "/=", "%%=",
+        "&", "|", "%^", "~", "<<",   --  < >, >> 可能有, 例如: std::vector<std::vector<int>>
+        "%?", ";", "{", "}",
     }
 
     local is_fake = false
@@ -328,3 +364,12 @@ end
 vim.keymap.set("n", "<Leader>fs", get_current_function_info, { desc = "Get current function name and line count" })
 vim.keymap.set("n", "<Leader>fH", move_to_cxx_function_start, { desc = "Move to cxx function start" })
 vim.keymap.set("n", "<Leader>fL", move_to_cxx_function_end, { desc = "Move to cxx function end" })
+
+
+-- neovim 中如果当前是注释行时, 新建下一行, 会自动补全 注释符号, 如何禁止此功能
+--
+-- 在 Neovim 里，当处于注释行时新建下一行会自动补全注释符号，
+-- 这通常是由 formatoptions 选项中的 c、r 和 o 标志控制的。
+-- 下面为你介绍几种禁止该功能的方
+-- vim.opt.formatoptions:remove({ 'c', 'r', 'o' })
+vim.cmd("set formatoptions-=cro")
