@@ -599,5 +599,18 @@ return {
     --     -- { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
     --     },
     -- },
+    
+    {
+        "folke/which-key.nvim",
+        opts = {
+            -- Which-key layout changed after latest update #5159
+            -- https://github.com/LazyVim/LazyVim/discussions/5159
+            preset = "classic",
+        },
+        win = {
+            height = { min = 4, max = 25 },
+            border = "none",
+        },
+    },
 
 }
