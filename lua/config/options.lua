@@ -153,3 +153,14 @@ vim.g.root_spec = { "cwd" }
 -- vim.g.lazyvim_picker = "telescope"
 -- vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_picker = "fzf"
+
+-- neovim 相比 vim, 有一个我认为的副作用: 重新打开 lazyvim 后, 对原来已经关闭保存
+-- 的文件进行 undo 撤销操作, 还会记忆到重新打开之前, 由此导致将重新打开之前的内容
+-- 也给撤销掉了, 如果没有 git 保证, 会导致原来明明已经保存的内容, 因为 undo 撤销
+-- 给删除掉了, 因此将此特性给禁止掉
+-- 分析: 个人任务, lazyvim 估计在某个地方保留了所谓的"session 状态", 由此实现
+--       undo 撤销上次内容, 但这个对我的使用造成负面影响
+-- How to make LazyVim to undo changes made in the current session only without 
+-- affecting changes saved in the previous sessions? #789
+-- https://github.com/LazyVim/LazyVim/discussions/789
+vim.opt.undofile = false
