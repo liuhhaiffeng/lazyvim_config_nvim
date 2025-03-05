@@ -613,4 +613,10 @@ return {
         },
     },
 
+    {
+        "akinsho/bufferline.nvim",
+        envet = "VeryLazy",
+        enabled = false,
+    },
+
 }

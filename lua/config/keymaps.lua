@@ -123,14 +123,46 @@ map("n", "<esc><esc><esc>", "<c-w>b<c-w>q", opts)
 -- nnoremap <silent><leader>up :!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>
 map("n", "<leader>lup", ":!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>", opts)
 
-map("n", "<leader>bm", ":e ~/bm<CR>", opts)
-map("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
-map("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
-map("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
-map("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
-map("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
-map("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
-map("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
-map("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
-map("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
-map("n", "<leader>$", ":BufferLineGoToBuffer -1<CR>", opts)
+
+--- ----------------------------------------------------------
+---   if  disable BufferLine
+--- ----------------------------------------------------------
+
+-- map("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
+-- map("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
+-- map("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
+-- map("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
+-- map("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
+-- map("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
+-- map("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
+-- map("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
+-- map("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
+-- map("n", "<leader>$", ":BufferLineGoToBuffer -1<CR>", opts)
+-- map("n", "<leader>bm", ":e ~/bm<CR>", opts)
+
+--- ----------------------------------------------------------
+---   else  enable tabxx
+--- ----------------------------------------------------------
+
+-- 创建一个空白tab, , "$" 作用: 新建在已有 tab 的最右侧
+map("n", "<leader>tn", ":$tabnew<CR>", opts)
+-- 复制当前tab, mz 记住当前行, 以便在 tabnew % 中跳转到当前行
+-- td: tab duplication
+map("n", "<leader>td", "mz:$tabnew %<CR>", opts)
+-- # 切换到tab1 (注： tab页从1开始)
+map("n", "<leader>1",  ":tabn 1<cr>", opts)
+map("n", "<leader>2",  ":tabn 2<cr>", opts)
+map("n", "<leader>3",  ":tabn 3<cr>", opts)
+map("n", "<leader>4",  ":tabn 4<cr>", opts)
+map("n", "<leader>5",  ":tabn 5<cr>", opts)
+map("n", "<leader>6",  ":tabn 6<cr>", opts)
+map("n", "<leader>7",  ":tabn 7<cr>", opts)
+map("n", "<leader>8",  ":tabn 8<cr>", opts)
+map("n", "<leader>9",  ":tabn 9<cr>", opts)
+-- tc: table close
+map("n", "<leader>tc",  ":tabclose<cr>", opts)
+map("n", "<leader>bm", ":$tabnew ~/bm<cr>", opts)
+
+--- ----------------------------------------------------------
+---   end if
+--- ----------------------------------------------------------
