@@ -164,3 +164,6 @@ vim.g.lazyvim_picker = "fzf"
 -- affecting changes saved in the previous sessions? #789
 -- https://github.com/LazyVim/LazyVim/discussions/789
 vim.opt.undofile = false
+
+-- to disable all animations, add the following to here
+vim.g.snacks_animate = false
