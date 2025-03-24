@@ -41,7 +41,8 @@ vim.api.nvim_command [[au BufNewFile,BufRead bookmark_pg set filetype=c]]
 
 -- .local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs/fsautocomplete.lua:`autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp`
 -- cxx 类型文件的 lsp 默认无法自动开启, 故增加配置开启
-vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx :LspStart]]
+-- go 类型文件的 lsp 默认也无法启动
+vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx,*.go :LspStart]]
 
 -- lazyvim markdown codeblock tags(即 tab按键上面的那个“撇”符号， ```sh  ```) 
 -- 默认不显示，通过如下设置让其显示：
