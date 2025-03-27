@@ -43,9 +43,21 @@ local options = {
 -- 说明: 当前目录下的文件 git blame 不卡, 可是打开一个 git 项目, 就会很快, 原因未知
 -- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 -- 特别说明：此 git blame 导致 lazyvim 快速上下移动时严重卡顿，故暂时禁止
-vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
-vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
-vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
+--
+-- 详细说明: 使用此 git blame 脚本时, 缺失会导致上下移动卡顿, ps 查看进程, 发现
+--           其会远程连接 github, 而国内 github 访问很卡或者根本无法访问, 由此
+--           就导致的卡顿
+--   \_ nvim comments.lua config.lua init.lua
+--      \_ nvim --embed comments.lua config.lua init.lua
+--            \_ /usr/libexec/git-core/git remote-https origin https://github.com/folke/ts-comments.nvim.git
+--                \_ /usr/libexec/git-core/git-remote-https origin https://github.com/folke/ts-comments.nvim.git
+--
+--  原因分析: git_blame_utils.lua 逻辑导致, 其在获取本地 git blame 时, 可能触发了向 remote 获取信息的联网行为,
+--            由此导致了卡顿
+--
+-- vim.api.nvim_command([[autocmd CursorHold   * lua require 'git_blame_utils'.blameVirtText()]])
+-- vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
+-- vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
 
 -- hi! link GitLens Comment
 -- vim.cmd("hi! link GitLens Comment")
