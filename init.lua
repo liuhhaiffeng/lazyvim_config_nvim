@@ -384,4 +384,16 @@ vim.keymap.set("n", "<Leader>fL", move_to_cxx_function_end, { desc = "Move to cx
 -- 这通常是由 formatoptions 选项中的 c、r 和 o 标志控制的。
 -- 下面为你介绍几种禁止该功能的方
 -- vim.opt.formatoptions:remove({ 'c', 'r', 'o' })
-vim.cmd("set formatoptions-=cro")
+-- vim.cmd("set formatoptions-=cro")
+-- vim.opt_local.formatoptions:remove({ 'r', 'o' })
+
+-- 上面设置不生效, 原因未知
+-- 下面如此设置 OK, 生效了
+-- https://neovim.discourse.group/t/how-do-i-prevent-neovim-commenting-out-next-line-after-a-comment-line/3711/5
+-- I did what voyeg3r did but I had to do it like this in my ~/.config/nvim/lua/vim-options.lua
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "*",
+  callback = function()
+    vim.opt_local.formatoptions:remove({ 'r', 'o' })
+  end,
+})
