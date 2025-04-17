@@ -5,6 +5,7 @@ require("config.lazy")
 -- https://darryldias.me/2023/set-color-scheme-in-neovim-lua/
 -- vim.cmd([[colorscheme tokyonight-storm]])
 -- vim.cmd([[colorscheme torte]])
+vim.cmd([[colorscheme gruvbox]])
 
 -- 不产生交换文件
 -- lhf: 实测 cmd([[xx]]) 不生效, 下面的写法 ('xx') 生效, 原因未知
