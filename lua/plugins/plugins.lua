@@ -566,22 +566,22 @@ return {
         },
     },
 
-    -- {
-    --     "Yggdroot/LeaderF",
-    --     config = function()
-    --         -- 取消默认快捷键映射
-    --         local function unmap_leaderf_shortcuts()
-    --             -- 方法1  实测不生效, 原因未知
-    --             -- vim.g.Lf_ShortcutF = ''
-    --             -- vim.g.Lf_ShortcutB = ''
-    --
-    --             -- 方法2
-    --             vim.keymap.del("n", "<leader>f")
-    --             vim.keymap.del("n", "<leader>b")
-    --         end
-    --         unmap_leaderf_shortcuts()
-    --     end,
-    -- },
+    {
+        "Yggdroot/LeaderF",
+        config = function()
+            -- 取消默认快捷键映射
+            local function unmap_leaderf_shortcuts()
+                -- 方法1  实测不生效, 原因未知
+                -- vim.g.Lf_ShortcutF = ''
+                -- vim.g.Lf_ShortcutB = ''
+
+                -- 方法2
+                vim.keymap.del("n", "<leader>f")
+                vim.keymap.del("n", "<leader>b")
+            end
+            unmap_leaderf_shortcuts()
+        end,
+    },
 
     {
         "vim-scripts/TagHighlight",
