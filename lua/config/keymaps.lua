@@ -169,3 +169,8 @@ map("n", "<leader>bm", ":$tabnew ~/bm<cr>", opts)
 
 map("n", "<leader>cn", ":cn<cr>", opts)
 map("n", "<leader>cp", ":cp<cr>", opts)
+
+-- WindTerm 下 <c-l> 向右窗口跳转不生效, 暂时使用临近的<c-;>替代
+map("n", "<c-;>", "<c-w>l", opts)
+
+map("n", "wa", ":wa<cr>", opts)
