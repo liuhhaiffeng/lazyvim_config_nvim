@@ -148,7 +148,7 @@ vim.opt.foldtext = "foldtext()"
 -- 显式将其设置为启动 nvim 时的"当前目录"
 vim.g.root_spec = { "cwd" }
 
--- 基于 snacks-picker 的 “float 窗口”感觉不好用，想回到 telescope, 
+-- 基于 snacks-picker 的 “float 窗口”感觉不好用，想回到 telescope,
 -- 无奈 git clone 总是失败，暂时先禁止掉
 -- vim.g.lazyvim_picker = "telescope"
 -- vim.g.lazyvim_picker = "snacks"
@@ -160,10 +160,11 @@ vim.g.lazyvim_picker = "fzf"
 -- 给删除掉了, 因此将此特性给禁止掉
 -- 分析: 个人任务, lazyvim 估计在某个地方保留了所谓的"session 状态", 由此实现
 --       undo 撤销上次内容, 但这个对我的使用造成负面影响
--- How to make LazyVim to undo changes made in the current session only without 
+-- How to make LazyVim to undo changes made in the current session only without
 -- affecting changes saved in the previous sessions? #789
 -- https://github.com/LazyVim/LazyVim/discussions/789
 vim.opt.undofile = false
 
 -- to disable all animations, add the following to here
 vim.g.snacks_animate = false
+
