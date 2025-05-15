@@ -4,8 +4,10 @@ require("config.lazy")
 -- Set color scheme in Neovim (Lua)
 -- https://darryldias.me/2023/set-color-scheme-in-neovim-lua/
 -- vim.cmd([[colorscheme tokyonight-storm]])
+-- CMakeLists.txt 中的内置关键字 moon, gruvbox 等可以高亮, 而 storm 不能高亮
+vim.cmd([[colorscheme tokyonight-moon]])
 -- vim.cmd([[colorscheme torte]])
-vim.cmd([[colorscheme gruvbox]])
+-- vim.cmd([[colorscheme gruvbox]])
 
 -- 不产生交换文件
 -- lhf: 实测 cmd([[xx]]) 不生效, 下面的写法 ('xx') 生效, 原因未知
@@ -98,6 +100,8 @@ vim.cmd("let g:Lf_PreviewInPopup = 0")      -- vim8 scrip style
 vim.cmd("let g:Lf_UseVersionControlTool = 0")
 vim.cmd("let g:Lf_DefaultExternalTool = \"find\"")
 vim.cmd("let g:Lf_ExternalCommand = 'find \"%s\" -type f'")
+
+-- vim.cmd("let g:Lf_WildIgnore = {'dir':['.git','.cache','.vscode'], 'file': ['*.taghl','tags','GPATH','GRTAGS','GTAGS']}")
 
 -- LazyVim is slow, Can I do something about it? #3427
 -- https://github.com/LazyVim/LazyVim/discussions/3427
@@ -398,3 +402,7 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.formatoptions:remove({ 'r', 'o' })
   end,
 })
+
+-- 增强分割线高亮
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#ff0000", bold = true })  -- 红色分割线（可自定义颜色）
+
