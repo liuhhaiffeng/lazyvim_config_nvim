@@ -42,53 +42,7 @@ return {
     --  https://github.com/LazyVim/LazyVim/discussions/672
   {
     "nvim-lualine/lualine.nvim",
-  opts = function(_, opts)
-  --           -- 参考:
-  --           -- 1. https://github.com/nanotee/nvim-lua-guide
-  --           --
-  --           -- local result = vim.api.nvim_exec(
-  --           --     [[
-  --           -- fun! ShowFuncName()
-  --           --     let lnum = line(".")
-  --           --     let col = col(".")
-  --           --     echohl ModeMsg
-  --           --     echo getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
-  --           --     echohl None
-  --           --     call search("\\%" . lnum . "l" . "\\%" . col . "c")
-  --           -- endfun
-  --           --
-  --           -- call ShowFuncName()
-  --           -- ]],
-  --           --     true)
-  --           --
-  --           -- 2. :h lualine
-  --           --
-  --           -- lualine ex:
-  --           -- local function hello()
-  --           --     return [[hello world]]
-  --           -- end
-  --           -- sections = { lualine_a = { hello } }
-  --
-  --           local function MyShowFuncName()
-  --               -- local result = "hehe"				  
-  --               local result = vim.api.nvim_exec(
-  --                   [[
-  --                 function! s:ShowFuncName()
-  --                     let s:lnum = line(".")
-  --                     let s:col = col(".")
-  --                     echohl ModeMsg
-  --                     echo getline(search("^[^ \t#/]\\{2}.*[^:]\s*$", 'bW'))
-  --                     echohl None
-  --                     call search("\\%" . s:lnum . "l" . "\\%" . s:col . "c")
-  --                 endfunction
-  --
-  --                 call s:ShowFuncName()
-  --
-  --                 ]], true)
-  --               return result
-  --           end
-  --
-  --     table.insert(opts.sections.lualine_c, { MyShowFuncName })
+    opts = function(_, opts)
         table.insert(opts.sections.lualine_x, "encoding")
         table.insert(opts.sections.lualine_x, "fileformat")
         table.insert(opts.sections.lualine_x, "filetype")
@@ -558,10 +512,13 @@ return {
     {
         "folke/ts-comments.nvim",
         event = "VeryLazy",
+        enabled = vim.fn.has("nvim-0.10.0") == 1,
         opts = {
             lang = {
-                c = "/* %s */",
-                cpp = "/* %s */"
+                -- c = "/* %s */",
+                -- cpp = "/* %s */"
+                c = "// %s",
+                cpp = "// %s"
             },
         },
     },
@@ -622,7 +579,6 @@ return {
     {
         "christerso/cpp-switcher",
         name = "cpp-switcher",
-        -- dir = vim.fn.stdpath("config") .. "/lua/custom/cpp-switcher",
         dependencies = { "nvim-lua/plenary.nvim" },
         config = true
     },
