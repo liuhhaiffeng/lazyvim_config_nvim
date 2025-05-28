@@ -10,12 +10,12 @@ require("config.lazy")
 -- vim.cmd([[colorscheme gruvbox]])
 
 -- 在 xshell  lazyvim 中并且使用 JetBransMono NFM 字体时, 某些主题
---  (如: storm-xx, gruvbox 等, 在显示字体时, 会出现不正确, 如 word 的字母 d 
+--  (如: storm-xx, gruvbox 等, 在显示字体时, 会出现不正确, 如 word 的字母 d
 --  显示不完整), 明确是某些主题的原因导致
 -- 发现下面3个主题显示正常, 并且个人觉得还不错, 推荐任一使用之
--- 暗深 catppuccin-mocha      
+-- 暗深 catppuccin-mocha
 -- 暗中 catppuccin-macchiato
--- 暗亮 catppuccin-frappe     
+-- 暗亮 catppuccin-frappe
 vim.cmd([[colorscheme catppuccin-macchiato]])
 
 -- 不产生交换文件
@@ -71,16 +71,11 @@ local options = {
 -- vim.api.nvim_command([[autocmd CursorMoved  * lua require 'git_blame_utils'.clearBlameVirtText()]])
 -- vim.api.nvim_command([[autocmd CursorMovedI * lua require 'git_blame_utils'.clearBlameVirtText()]])
 
--- hi! link GitLens Comment
--- vim.cmd("hi! link GitLens Comment")
--- vim.api.nvim_command([[hi! link GitLens Comment]])
--- 上面两句(hi! link)不清楚什么意思, 并且也没有生效, 下面设置生效了
---   (让 gitlens virtual text 改变颜色了)
+
+-- 默认灰色的看不清楚, 设置高亮
 vim.api.nvim_command("hi GitLens ctermfg=green guifg=green")
 -- ----------------------------------------------------------------
 
--- 说明: 下面两个命令效果等价
--- vim.cmd("hi Comment ctermfg=blue guifg=blue")
 -- 说明：我的 y9000p 笔记屏幕，对于 blue 显示看不清楚， 暂时将其修改为
 --       绿色
 -- vim.api.nvim_command("hi Comment ctermfg=blue guifg=blue")
@@ -100,17 +95,17 @@ vim.api.nvim_command("hi Folded ctermfg=cyan guifg=cyan")
 --       需要说明的是, nvim 目前不支持 vim9 scrip 语法, vim8scrip 语法是
 --       生效的
 -- vim.cmd("g:Lf_PreviewInPopup = 0")       -- vim9 scrip style
-vim.cmd("let g:Lf_PreviewInPopup = 0")      -- vim8 scrip style
+vim.cmd("let g:Lf_PreviewInPopup = 0") -- vim8 scrip style
 
 -- # 说明: Leaderf 默认使用 rg 来索引文件, 而 rg 默认 repect .gitigore-files 的,
 -- # 即 git-reposity 下 ignore-files 不会被查询到, 这个默认设置不符合本人的要求,
 -- # 本人期望如下 "find xx" 的结果, 因此进行如下的设置
 -- # Default value is 1
 vim.cmd("let g:Lf_UseVersionControlTool = 0")
-vim.cmd("let g:Lf_DefaultExternalTool = \"find\"")
+vim.cmd('let g:Lf_DefaultExternalTool = "find"')
 vim.cmd("let g:Lf_ExternalCommand = 'find \"%s\" -type f'")
 
--- vim.cmd("let g:Lf_WildIgnore = {'dir':['.git','.cache','.vscode'], 'file': ['*.taghl','tags','GPATH','GRTAGS','GTAGS']}")
+vim.cmd("let g:Lf_WildIgnore = {'dir':['.git','.cache','.vscode'], 'file': ['*.taghl','tags','GPATH','GRTAGS','GTAGS']}")
 
 -- LazyVim is slow, Can I do something about it? #3427
 -- https://github.com/LazyVim/LazyVim/discussions/3427
@@ -120,8 +115,6 @@ vim.cmd("let g:python3_host_prog = '/usr/bin/python3'")
 -- default 0.50
 -- vim.cmd("let g:Lf_WindowHeight = 0.30")
 vim.cmd("let g:Lf_WindowHeight = 0.15")
-
-
 
 -- TODO: 为解决问题：
 --
@@ -135,266 +128,277 @@ vim.cmd("let g:Lf_WindowHeight = 0.15")
 -- nv core.lua +34
 
 local function is_fake_func_name(line)
-    -- 过滤 伪函数名称, 如:
-    -- if ()
-    -- else ()
-    -- while ()
-    -- do ()
-    -- std::thread([this]() { })
-    local fake_func_names = {
-        "if",
-        "else",
-        "switch",
-        "case",
-        "default",
-        "for",
-        "while",
-        "do",
-        "break",
-        "continue",
-        "goto",
-        "thread",
-    }
+  -- 过滤 伪函数名称, 如:
+  -- if ()
+  -- else ()
+  -- while ()
+  -- do ()
+  -- std::thread([this]() { })
+  local fake_func_names = {
+    "if",
+    "else",
+    "switch",
+    "case",
+    "default",
+    "for",
+    "while",
+    "do",
+    "break",
+    "continue",
+    "goto",
+    "thread",
+  }
 
-    local is_fake = false
-    for _, str in ipairs(fake_func_names) do
-        if str == line then
-            is_fake = true
-            break
-        end
+  local is_fake = false
+  for _, str in ipairs(fake_func_names) do
+    if str == line then
+      is_fake = true
+      break
     end
+  end
 
-    return is_fake
+  return is_fake
 end
 
 local function is_fake_func_para(para)
-    -- 过滤 伪函数参数, 如:
-    --
-    -- case1:
-    -- std::thread([this]() { 
-    -- })
-    --  例外: int main(int argc, char *argv[]) {
-    -- 解决: 对于 thread([]) 情况, 在上述 is_fake_func_name() 中通过 thread 关键词已经
-    --       过滤, 这里就去除 [ 和 ], 避免误判 char *argv[] 这种情况
-    --
-    -- 违例, 需要注释:
-    -- "%[",    -- 正则匹配时, 对于 [ ]  关键词, 需要使用 % 进行转义
-    -- 违例, 需要注释:
-    -- "%]",
-    --
-    -- case2:
-    -- FB_UPDATE_PENDING(cl) && !sraRgnEmpty(cl->requestedRegion)) {
-    --   说明: 上述表达式匹配到的 () 中的参数为:  cl) && !sraRgnEmpty(cl->requestedRegion)
-    --         因此, 里面的 ! -> 可作为过滤项目, 另外再增加一个 . 号(即: cl.requestedRegion)
-    --
-    --  TODO: 
-    --  虽然下面列举了如此多的场景, 但 C++ 函数默认参数一出场, 就将好多破掉了, 举例:
-    --  void func(bool i = (j == 5 ? false : true))
-    --  void func(bool i = ( j & k ?) false : true))
-    --  void func(bool i = (j >= 0 ?) false : true))
-    --  void func(book i = ( (j << 2) != 0 ?) false : true))
-    --  ....
-    --  感觉, C++ 的默认参数几乎可以将下面过滤规则给破掉, 但是有如下乐观想法:
-    --    1. C++ 上述默认参数一般在 "声明"中, 不体现在定义中
-    --    2. 这样的情况毕竟少数吧, 暂时不管了
-    local fake_func_paras = {
-        "!",     -- 注: 测试发现 !  和  %! 均能生效
-        "%->",    -- 注: 测试发现 -> 和 %-> 均能生效
-        "%.",    -- 函数参数中不应该有 . 号
-        "%+",     -- 函数参数中不应该有 + 号吧?
-        "<=",    -- <= 不应该有
-        ">=",    -- >= 不应该有
-        "||",
-        "&&",
-        "==",    -- 函数参数中不应该有 == 号 (注: 单个 = 是有可能的, 如 C++ 参数默认值)
-        "!=", "%+=", "%-=", "%*=", "/=", "%%=",
-        "&", "|", "%^", "~", "<<",   --  < >, >> 可能有, 例如: std::vector<std::vector<int>>
-        "%?", ";", "{", "}",
-    }
+  -- 过滤 伪函数参数, 如:
+  --
+  -- case1:
+  -- std::thread([this]() {
+  -- })
+  --  例外: int main(int argc, char *argv[]) {
+  -- 解决: 对于 thread([]) 情况, 在上述 is_fake_func_name() 中通过 thread 关键词已经
+  --       过滤, 这里就去除 [ 和 ], 避免误判 char *argv[] 这种情况
+  --
+  -- 违例, 需要注释:
+  -- "%[",    -- 正则匹配时, 对于 [ ]  关键词, 需要使用 % 进行转义
+  -- 违例, 需要注释:
+  -- "%]",
+  --
+  -- case2:
+  -- FB_UPDATE_PENDING(cl) && !sraRgnEmpty(cl->requestedRegion)) {
+  --   说明: 上述表达式匹配到的 () 中的参数为:  cl) && !sraRgnEmpty(cl->requestedRegion)
+  --         因此, 里面的 ! -> 可作为过滤项目, 另外再增加一个 . 号(即: cl.requestedRegion)
+  --
+  --  TODO:
+  --  虽然下面列举了如此多的场景, 但 C++ 函数默认参数一出场, 就将好多破掉了, 举例:
+  --  void func(bool i = (j == 5 ? false : true))
+  --  void func(bool i = ( j & k ?) false : true))
+  --  void func(bool i = (j >= 0 ?) false : true))
+  --  void func(book i = ( (j << 2) != 0 ?) false : true))
+  --  ....
+  --  感觉, C++ 的默认参数几乎可以将下面过滤规则给破掉, 但是有如下乐观想法:
+  --    1. C++ 上述默认参数一般在 "声明"中, 不体现在定义中
+  --    2. 这样的情况毕竟少数吧, 暂时不管了
+  local fake_func_paras = {
+    "!", -- 注: 测试发现 !  和  %! 均能生效
+    "%->", -- 注: 测试发现 -> 和 %-> 均能生效
+    "%.", -- 函数参数中不应该有 . 号
+    "%+", -- 函数参数中不应该有 + 号吧?
+    "<=", -- <= 不应该有
+    ">=", -- >= 不应该有
+    "||",
+    "&&",
+    "==", -- 函数参数中不应该有 == 号 (注: 单个 = 是有可能的, 如 C++ 参数默认值)
+    "!=",
+    "%+=",
+    "%-=",
+    "%*=",
+    "/=",
+    "%%=",
+    "&",
+    "|",
+    "%^",
+    "~",
+    "<<", --  < >, >> 可能有, 例如: std::vector<std::vector<int>>
+    "%?",
+    ";",
+    "{",
+    "}",
+  }
 
-    local is_fake = false
-    for _, str in ipairs(fake_func_paras) do
-        local match = para:match(str)
-        if match then
-            is_fake = true
-            break
-        end
+  local is_fake = false
+  for _, str in ipairs(fake_func_paras) do
+    local match = para:match(str)
+    if match then
+      is_fake = true
+      break
     end
+  end
 
-    return is_fake
+  return is_fake
 end
 
 local function get_start_line(lines, current_line)
-    -- 查找函数的起始位置（向上查找第一个 '{'）
-    local start_line = current_line
-    while start_line > 0 do
-        local line_content = lines[start_line]
-        -- if line_content:match("%f[^%s]}%s*{") then
-        local match1 = line_content:match("^%{%s*")
-        -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如: 
-        --    ShutdownXLOG(int code, Datum arg) {
-            -- 因此, 目前暂使用 ".*" 来泛匹配吧
-            -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
-            -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
-            -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
-            local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
-            local match2_func_para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
-            -- print("para = ", para, "match2 = ", match2)
-            if match1 or match2 then
-                if (match2) then
-                    if is_fake_func_name(match2) or is_fake_func_para(match2_func_para) then
-                        goto fake_continue
-                    end
-                end
-                -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
-                break
-            end
-
-            ::fake_continue::
-            start_line = start_line - 1
+  -- 查找函数的起始位置（向上查找第一个 '{'）
+  local start_line = current_line
+  while start_line > 0 do
+    local line_content = lines[start_line]
+    -- if line_content:match("%f[^%s]}%s*{") then
+    local match1 = line_content:match("^%{%s*")
+    -- %([%s%w_]*%) 中的 [%s%w_]* 无法匹配所以场景, 如:
+    --    ShutdownXLOG(int code, Datum arg) {
+    -- 因此, 目前暂使用 ".*" 来泛匹配吧
+    -- local match2 = line_content:match("[%w_]+%s*%([%s%w_]*%)%s*%{")
+    -- local match2 = line_content:match("[%w_]+%s*%(.*%)%s*%{")
+    -- 匹配, 并且 match2 仅仅获取小括号() 的匹配内容
+    local match2 = line_content:match("([%w_]+)%s*%(.*%)%s*%{")
+    local match2_func_para = line_content:match("[%w_]+%s*%((.*)%)%s*%{")
+    -- print("para = ", para, "match2 = ", match2)
+    if match1 or match2 then
+      if match2 then
+        if is_fake_func_name(match2) or is_fake_func_para(match2_func_para) then
+          goto fake_continue
         end
+      end
+      -- print(string.format("start_line(%d), match1(%s), match2(%s)", start_line, match1, match2))
+      break
+    end
 
-        -- 检查是否找到了函数的起始位置
-        if start_line <= 0 then
-            vim.notify("Cursor is not inside a function.", vim.log.levels.WARN)
-            return
-        end
+    ::fake_continue::
+    start_line = start_line - 1
+  end
 
-        return start_line
+  -- 检查是否找到了函数的起始位置
+  if start_line <= 0 then
+    vim.notify("Cursor is not inside a function.", vim.log.levels.WARN)
+    return
+  end
+
+  return start_line
 end
 
 local function get_end_line(lines, current_line)
-    -- 查找函数的结束位置（向前查找第一个 '}'）
-    local end_line = current_line
-    while end_line <= #lines do
-        -- local line_content = lines[end_line + 1]
-        local line_content = lines[end_line]
-        -- 注: gmatch 会导致结果不正确
-        -- if line_content:gmatch("^%}%s*") then
-        if line_content:match("^%}%s*") then
-            -- print(string.format("end_line(%d), #lines(%d), line_content(%s)", end_line, #lines, line_content))
-            break
-        end
-        end_line = end_line + 1
+  -- 查找函数的结束位置（向前查找第一个 '}'）
+  local end_line = current_line
+  while end_line <= #lines do
+    -- local line_content = lines[end_line + 1]
+    local line_content = lines[end_line]
+    -- 注: gmatch 会导致结果不正确
+    -- if line_content:gmatch("^%}%s*") then
+    if line_content:match("^%}%s*") then
+      -- print(string.format("end_line(%d), #lines(%d), line_content(%s)", end_line, #lines, line_content))
+      break
     end
+    end_line = end_line + 1
+  end
 
-    -- print(string.format("end_line(%d), #lines(%d)", end_line, #lines))
-    -- 检查是否找到了函数的结束位置
-    -- if end_line >= #lines then
-    -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
-    -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
-    if end_line > #lines then
-        vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
-        return
-    end
+  -- print(string.format("end_line(%d), #lines(%d)", end_line, #lines))
+  -- 检查是否找到了函数的结束位置
+  -- if end_line >= #lines then
+  -- 函数最后的 } 有可能就是最后一行, 因此去除 >= 中的 "等于"
+  -- 注: 当然, 这里的前提是"当前函数以 1 开头, 而非 0"
+  if end_line > #lines then
+    vim.notify("Failed to find the end of the function.", vim.log.levels.WARN)
+    return
+  end
 
-    return end_line
+  return end_line
 end
 
 local function get_current_function_info()
-    -- 获取当前缓冲区的所有行
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    -- 当前光标位置                                 
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local current_line = cursor[1] -- 行号从 1 开始
+  -- 获取当前缓冲区的所有行
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- 当前光标位置
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line = cursor[1] -- 行号从 1 开始
 
-    local start_line = get_start_line(lines, current_line)
-    if not start_line then
-        return
+  local start_line = get_start_line(lines, current_line)
+  if not start_line then
+    return
+  end
+
+  local end_line = get_end_line(lines, current_line)
+  if not end_line then
+    return
+  end
+
+  -- 提取函数名称（从起始行向上查找函数定义）
+  local function_name = "Unknown"
+  for i = start_line, 0, -1 do
+    -- local line_content = lines[i + 1]
+    local line_content = lines[i]
+    -- 匹配函数定义行（简化版正则表达式）
+
+    -- case 1
+    -- 仅仅返回函数名称
+    -- 举例:
+    --   DWORD VDSViewer::ConnectTranThread(int i, int j)
+    --   match 为 ConnectTranThread
+    -- local match = line_content:match("([%w_]+)%s*%(.*")
+
+    -- case 2
+    -- 返回函数名称及后面的所有内容
+    -- 举例:
+    --   DWORD VDSViewer::ConnectTranThread(int i, int j)
+    --   match 为 ConnectTranThread(int i, int j)
+    local match = line_content:match("[%w_]+%s*%(.*")
+    if match then
+      -- case 1
+      -- 获取函数名称匹配的类容
+      -- 举例:
+      --   DWORD VDSViewer::ConnectTranThread()
+      --   match 为 ConnectTranThread()
+      -- function_name = match
+
+      -- case 2
+      -- 返回函数名称所在行(全部内容)
+      -- 举例:
+      --   DWORD VDSViewer::ConnectTranThread()
+      --   line_content 为 DWORD VDSViewer::ConnectTranThread()
+      function_name = line_content
+      -- print(string.format("function_name(%s)", function_name))
+      break
     end
+  end
 
-    local end_line = get_end_line(lines, current_line)
-    if not end_line then
-        return
-    end
+  -- 计算函数的行数
+  local function_lines = end_line - start_line + 1
 
-    -- 提取函数名称（从起始行向上查找函数定义）
-    local function_name = "Unknown"
-    for i = start_line, 0, -1 do
-        -- local line_content = lines[i + 1]
-        local line_content = lines[i]
-        -- 匹配函数定义行（简化版正则表达式）
+  local percent = 0
+  if current_line >= 0 and function_lines > 0 then
+    percent = ((current_line - start_line + 1) * 100) / function_lines
+  end
 
-        -- case 1
-        -- 仅仅返回函数名称
-        -- 举例:
-        --   DWORD VDSViewer::ConnectTranThread(int i, int j)
-        --   match 为 ConnectTranThread
-        -- local match = line_content:match("([%w_]+)%s*%(.*")
-
-        -- case 2
-        -- 返回函数名称及后面的所有内容
-        -- 举例:
-        --   DWORD VDSViewer::ConnectTranThread(int i, int j)
-        --   match 为 ConnectTranThread(int i, int j)
-        local match = line_content:match("[%w_]+%s*%(.*")
-        if match then
-            -- case 1
-            -- 获取函数名称匹配的类容
-            -- 举例:
-            --   DWORD VDSViewer::ConnectTranThread()
-            --   match 为 ConnectTranThread()
-            -- function_name = match
-
-            -- case 2
-            -- 返回函数名称所在行(全部内容)
-            -- 举例:
-            --   DWORD VDSViewer::ConnectTranThread()
-            --   line_content 为 DWORD VDSViewer::ConnectTranThread()
-            function_name = line_content
-            -- print(string.format("function_name(%s)", function_name))
-            break
-        end
-    end
-
-    -- 计算函数的行数
-    local function_lines = end_line - start_line + 1
-
-    local percent = 0
-    if current_line >= 0 and function_lines > 0 then
-        percent = ((current_line - start_line + 1) * 100) / function_lines;
-    end
-
-    -- 显示结果
-    -- vim.notify(string.format("Function Name: %s\nFunction Lines: %d\nPercentage: %d\n", function_name, function_lines, percent), vim.log.levels.INFO)
-    print(string.format("%s %d %d%% (start_line %d)", function_name, function_lines, percent, start_line))
+  -- 显示结果
+  -- vim.notify(string.format("Function Name: %s\nFunction Lines: %d\nPercentage: %d\n", function_name, function_lines, percent), vim.log.levels.INFO)
+  print(string.format("%s %d %d%% (start_line %d)", function_name, function_lines, percent, start_line))
 end
 
 local function move_to_cxx_function_start()
-    -- 获取当前缓冲区的所有行
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    -- 当前光标位置                                 
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local current_line = cursor[1] -- 行号从 1 开始
+  -- 获取当前缓冲区的所有行
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- 当前光标位置
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line = cursor[1] -- 行号从 1 开始
 
-    local start_line = get_start_line(lines, current_line)
-    if not start_line then
-        return
-    end
+  local start_line = get_start_line(lines, current_line)
+  if not start_line then
+    return
+  end
 
-    vim.api.nvim_win_set_cursor(0, {start_line, 0})
+  vim.api.nvim_win_set_cursor(0, { start_line, 0 })
 end
 
 local function move_to_cxx_function_end()
-    -- 获取当前缓冲区的所有行
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-    -- 当前光标位置                                 
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    local current_line = cursor[1] -- 行号从 1 开始
+  -- 获取当前缓冲区的所有行
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  -- 当前光标位置
+  local cursor = vim.api.nvim_win_get_cursor(0)
+  local current_line = cursor[1] -- 行号从 1 开始
 
-    local end_line = get_end_line(lines, current_line)
-    if not end_line then
-        return
-    end
+  local end_line = get_end_line(lines, current_line)
+  if not end_line then
+    return
+  end
 
-    vim.api.nvim_win_set_cursor(0, {end_line, 0})
+  vim.api.nvim_win_set_cursor(0, { end_line, 0 })
 end
 
 -- 将函数绑定到快捷键（例如 <Leader>cf）
 vim.keymap.set("n", "<Leader>fs", get_current_function_info, { desc = "Get current function name and line count" })
 vim.keymap.set("n", "<Leader>fH", move_to_cxx_function_start, { desc = "Move to cxx function start" })
 vim.keymap.set("n", "<Leader>fL", move_to_cxx_function_end, { desc = "Move to cxx function end" })
-
 
 -- neovim 中如果当前是注释行时, 新建下一行, 会自动补全 注释符号, 如何禁止此功能
 --
@@ -412,10 +416,9 @@ vim.keymap.set("n", "<Leader>fL", move_to_cxx_function_end, { desc = "Move to cx
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "*",
   callback = function()
-    vim.opt_local.formatoptions:remove({ 'r', 'o' })
+    vim.opt_local.formatoptions:remove({ "r", "o" })
   end,
 })
 
 -- 增强分割线高亮
-vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#ff0000", bold = true })  -- 红色分割线（可自定义颜色）
-
+vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#ff0000", bold = true }) -- 红色分割线（可自定义颜色）
