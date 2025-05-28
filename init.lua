@@ -5,9 +5,18 @@ require("config.lazy")
 -- https://darryldias.me/2023/set-color-scheme-in-neovim-lua/
 -- vim.cmd([[colorscheme tokyonight-storm]])
 -- CMakeLists.txt 中的内置关键字 moon, gruvbox 等可以高亮, 而 storm 不能高亮
-vim.cmd([[colorscheme tokyonight-moon]])
+-- vim.cmd([[colorscheme tokyonight-moon]])
 -- vim.cmd([[colorscheme torte]])
 -- vim.cmd([[colorscheme gruvbox]])
+
+-- 在 xshell  lazyvim 中并且使用 JetBransMono NFM 字体时, 某些主题
+--  (如: storm-xx, gruvbox 等, 在显示字体时, 会出现不正确, 如 word 的字母 d 
+--  显示不完整), 明确是某些主题的原因导致
+-- 发现下面3个主题显示正常, 并且个人觉得还不错, 推荐任一使用之
+-- 暗深 catppuccin-mocha      
+-- 暗中 catppuccin-macchiato
+-- 暗亮 catppuccin-frappe     
+vim.cmd([[colorscheme catppuccin-macchiato]])
 
 -- 不产生交换文件
 -- lhf: 实测 cmd([[xx]]) 不生效, 下面的写法 ('xx') 生效, 原因未知
@@ -107,6 +116,10 @@ vim.cmd("let g:Lf_ExternalCommand = 'find \"%s\" -type f'")
 -- https://github.com/LazyVim/LazyVim/discussions/3427
 vim.cmd("let g:python_host_prog  = '/usr/bin/python2'")
 vim.cmd("let g:python3_host_prog = '/usr/bin/python3'")
+
+-- default 0.50
+-- vim.cmd("let g:Lf_WindowHeight = 0.30")
+vim.cmd("let g:Lf_WindowHeight = 0.15")
 
 
 

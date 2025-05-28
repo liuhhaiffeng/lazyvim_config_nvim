@@ -215,18 +215,6 @@ return {
         "zivyangll/git-blame.vim",
         enabled = true,
     },
-
-    -- {
-    --     "gou4shi1/git-lens.vim",
-    --     enabled = false,
-    -- },
-
-    -- {
-    --     -- nvim 不支持 vim9script 的插件, 暂时禁止
-    --     "Eliot00/git-lens.vim",
-    --     enabled = true,
-    -- },
-
     {
         -- https://github.com/fredrikaverpil/dotfiles/blob/ee04215d632f7c91287031af41497bae98d63dd8/nvim-lazyvim/lua/plugins/telescope.lua#L43-L54
         "nvim-telescope/telescope.nvim",
@@ -246,30 +234,9 @@ return {
                     "--smart-case",
                     "--trim",
                 },
-                layout_config = {
-                    -- lhf 注: 目前不知道 picker result_win 如何 wrap, 只能采用
-                    -- 此方法尽可能将 picker win 增大
-                    -- 解决: ~/.local/share/nvim/lazy/telescope.nvim/README.md" 254 lines
-                    --       normal mode 下:
-                    --       <C-f>        | Scroll left in preview window    
-                    --       <C-k>        | Scroll right in preview window   
-                    --       <M-f>        | Scroll left in results window    
-                    --       <M-k>        | Scroll right in results window
-                    -- width = function(_, max_columns, _)
-                    -- return math.min(max_columns, 1920)
-                    -- end,
-                    -- height = function(_, _, max_lines)
-                    -- return math.min(max_lines, 1080)
-                    -- end,
-                },
-                -- wrap_results = true,
             },
         },
     },
-
-    -- {
-    --     "nvim-telescope/telescope-symbols.nvim",
-    -- },
 
     {
       "folke/trouble.nvim",
@@ -576,11 +543,13 @@ return {
         enabled = false,
     },
 
-    {
-        "christerso/cpp-switcher",
-        name = "cpp-switcher",
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = true
-    },
+    -- 有了 map("n", "<leader>ao", ":ClangdSwitchSourceHeader<cr>", opts)
+    -- 暂时就不需要 cpp-switcher 插件了
+    -- {
+    --     "christerso/cpp-switcher",
+    --     name = "cpp-switcher",
+    --     dependencies = { "nvim-lua/plenary.nvim" },
+    --     config = true
+    -- },
 
 }

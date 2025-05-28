@@ -105,11 +105,10 @@ map("n", "<leader>/w", ":LeaderfLineCword<cr>", opts)
 map("n", "<c-p>", ":Leaderf --previous<cr>", opts)
 map("n", "<c-n>", ":Leaderf --next<cr>", opts)
 
--- 注: 3次容易误按, 暂时先设置为4次
--- nnoremap <esc><esc><esc> <c-w>b<c-w>q
--- nnoremap <esc><esc><esc><esc> <c-w>b<c-w>q
--- map("n", "<esc><esc><esc><esc>", "<c-w>b<c-w>q", opts)
+-- 关闭最下方的窗口
 map("n", "<esc><esc><esc>", "<c-w>b<c-w>q", opts)
+-- 关闭最下方上面的窗口
+map("n", "<esc><esc><esc><esc>", "<c-w>b<c-w>k<c-w>q", opts)
 
 -- # 更新 ~/.LfCache/gtags
 -- # 更多详情 vim 中查看帮助  :h g:Lf_Gtags
@@ -178,3 +177,10 @@ map("n", "<c-;>", "<c-w>l", opts)
 --   设置造成的, 我定义了个 wa, 所以按下 w 键, 会等待可能得 wa 输入,
 --   所以导致 w 移动操作变慢
 -- map("n", "wa", ":wa<cr>", opts)
+
+-- Lazyvim 内置的 <leader>l 总是和 我自定义的 Leaderf 相关的 <leader>lxx 冲突,
+-- 因此将内置的 <leader>l 删除, 对其重新定义
+vim.api.nvim_del_keymap("n", "<leader>l")
+map("n", "<leader>ll", ":Lazy<cr>", opts)
+
+map("n", "<leader>ao", ":ClangdSwitchSourceHeader<cr>", opts)
