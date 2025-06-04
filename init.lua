@@ -16,7 +16,10 @@ require("config.lazy")
 -- 暗深 catppuccin-mocha
 -- 暗中 catppuccin-macchiato
 -- 暗亮 catppuccin-frappe
-vim.cmd([[colorscheme catppuccin-macchiato]])
+-- vim.cmd([[colorscheme catppuccin-macchiato]])
+
+-- industry 属于高亮, 目前个人比较钟意
+vim.cmd([[colorscheme industry]])
 
 -- 不产生交换文件
 -- lhf: 实测 cmd([[xx]]) 不生效, 下面的写法 ('xx') 生效, 原因未知
