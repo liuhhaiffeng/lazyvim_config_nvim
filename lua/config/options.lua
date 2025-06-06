@@ -150,9 +150,9 @@ vim.g.root_spec = { "cwd" }
 
 -- 基于 snacks-picker 的 “float 窗口”感觉不好用，想回到 telescope,
 -- 无奈 git clone 总是失败，暂时先禁止掉
--- vim.g.lazyvim_picker = "telescope"
+vim.g.lazyvim_picker = "telescope"
 -- vim.g.lazyvim_picker = "snacks"
-vim.g.lazyvim_picker = "fzf"
+-- vim.g.lazyvim_picker = "fzf"
 
 -- neovim 相比 vim, 有一个我认为的副作用: 重新打开 lazyvim 后, 对原来已经关闭保存
 -- 的文件进行 undo 撤销操作, 还会记忆到重新打开之前, 由此导致将重新打开之前的内容
