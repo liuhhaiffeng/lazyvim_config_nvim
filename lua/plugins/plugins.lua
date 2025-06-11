@@ -490,6 +490,13 @@ return {
         },
     },
 
+    -- LeaderF 依赖 python2 或 python3
+    -- 对于 vim --version 中要有 +python3, 否则需要手动编译(包含 python对应版本)
+    -- 对于 nvim, 其默认不直接依赖python 
+    -- 使用 echo has('python') 或 echo has('python3')) 查看时会发现均为 0,
+    -- nvim 需要使用 pip3 install pynvim 安装 pynvim, 默认安装后, 再使用上述 
+    -- echo xx 查询, 就 OK 了, 这时使用 Leaderf 才没有问题
+    -- 参考: https://carakan.net/blog/2020/04/configuring-python3-on-neovim/
     {
         "Yggdroot/LeaderF",
         config = function()
@@ -500,8 +507,8 @@ return {
                 -- vim.g.Lf_ShortcutB = ''
 
                 -- 方法2
-                vim.keymap.del("n", "<leader>f")
-                vim.keymap.del("n", "<leader>b")
+                -- vim.keymap.del("n", "<leader>f")
+                -- vim.keymap.del("n", "<leader>b")
             end
             unmap_leaderf_shortcuts()
         end,

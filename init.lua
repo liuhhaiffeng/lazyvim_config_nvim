@@ -97,7 +97,7 @@ vim.cmd("let g:Lf_WildIgnore = {'dir':['.git','.cache','.vscode'], 'file': ['*.t
 
 -- LazyVim is slow, Can I do something about it? #3427
 -- https://github.com/LazyVim/LazyVim/discussions/3427
-vim.cmd("let g:python_host_prog  = '/usr/bin/python2'")
+vim.cmd("let g:python_host_prog  = '/usr/bin/python'")
 vim.cmd("let g:python3_host_prog = '/usr/bin/python3'")
 
 -- default 0.50
