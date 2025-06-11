@@ -509,6 +509,10 @@ return {
                 -- 方法2
                 -- vim.keymap.del("n", "<leader>f")
                 -- vim.keymap.del("n", "<leader>b")
+
+                -- 方法3
+                vim.cmd("let g:Lf_ShortcutF = ''")
+                vim.cmd("let g:Lf_ShortcutB = ''")
             end
             unmap_leaderf_shortcuts()
         end,
