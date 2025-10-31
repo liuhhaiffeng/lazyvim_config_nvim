@@ -54,10 +54,10 @@ return {
         -- 某些场景下，我需要显示 full path， 通过此设定
         -- 参考：https://github.com/LazyVim/LazyVim/discussions/3010
         -- 参考2： ~/.local/share/nvim/lazy/lualine.nvim/doc/lualine.txt 736
-        table.insert(opts.sections.lualine_c, {
-            "filename",
-            path = 3,
-        })
+        -- table.insert(opts.sections.lualine_c, {
+        --     "filename",
+        --     path = 3,
+        -- })
   end,
   },
 
@@ -578,8 +578,7 @@ return {
                 opts[pos] = opts[pos] or {}
                 table.insert(opts[pos], {
                     ft = "snacks_terminal",
-                    -- size = { height = 0.4 },
-                    size = { height = 0.2 },
+                    size = { height = 0.4 },
                     title = "%{b:snacks_terminal.id}: %{b:term_title}",
                     filter = function(_buf, win)
                         return vim.w[win].snacks_win
