@@ -206,7 +206,7 @@ return {
     },
 
     {
-        "echasnovski/mini.indentscope",
+        "nvim-mini/mini.indentscope",
         enabled = false,
     },
     -- ------------------------------------------------------
@@ -283,39 +283,48 @@ return {
     --    vim 也有一个 autoformat 不知道这二者有何区别, 反正都设置为 false 了
     --
     --    https://vi.stackexchange.com/questions/42597/how-to-disable-autoformating-on-save-on-lazyvim
-  {
-    "neovim/nvim-lspconfig",
-    opts = {
-      autoformat = false,
-      -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
-      -- 参考： /home/haifeng/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
-      diagnostics = {
-          virtual_text = false,
-          signs = false,
-          underline = false,
-      },
-      -- CXX 下不习惯 inlay_hints， 禁止掉
-      inlay_hints = { enabled = false },
-    },
-    init = function()
-        local keys = require("lazyvim.plugins.lsp.keymaps").get()
-        -- lsp.keymaps 增加 items 示例
-        -- keys[#keys + 1] = { "[[", vim.diagnostic.open_float, mode = "n" }
-        -- keys[#keys + 1] = { "]]", vim.diagnostic.open_float, mode = "n" }
-        
-        -- 删除插件中对下面 按键 绑定, 使之恢复到默认的行为
-        local keysToRemove = { "[[", "]]" }
-        for i = #keys, 1, -1 do
-            local value = keys[i][1]
-            for _, str in ipairs(keysToRemove) do
-                if value == str then
-                    table.remove(keys, i)
-                    break
-                end
-            end
-        end
-    end,
-  },
+    -- {
+    --     "neovim/nvim-lspconfig",
+    --     opts = {
+    --         autoformat = false,
+    --         -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
+    --         -- 参考： /home/haifeng/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
+    --         diagnostics = {
+    --             virtual_text = false,
+    --             signs = false,
+    --             underline = false,
+    --         },
+    --         -- CXX 下不习惯 inlay_hints， 禁止掉
+    --         inlay_hints = { enabled = false },
+    --
+    --         servers = {
+    --             ['*'] = {
+    --                 keys = {
+    --                     { "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", has = "definition"},
+    --                 },
+    --             },
+    --         },
+    --
+    --     },
+    --     init = function()
+    --         local keys = require("lazyvim.plugins.lsp.keymaps").get()
+    --         -- lsp.keymaps 增加 items 示例
+    --         -- keys[#keys + 1] = { "[[", vim.diagnostic.open_float, mode = "n" }
+    --         -- keys[#keys + 1] = { "]]", vim.diagnostic.open_float, mode = "n" }
+    --
+    --         -- 删除插件中对下面 按键 绑定, 使之恢复到默认的行为
+    --         local keysToRemove = { "[[", "]]" }
+    --         for i = #keys, 1, -1 do
+    --             local value = keys[i][1]
+    --             for _, str in ipairs(keysToRemove) do
+    --                 if value == str then
+    --                     table.remove(keys, i)
+    --                     break
+    --                 end
+    --             end
+    --         end
+    --     end,
+    -- },
 
     -- cxx 文件中, 下面的 else 后单独一行的大括号使用 == 无法自动对齐, 发现此为
     -- nvim-treesitter 插件导致, 因此将其 indent 禁止, 使用 nvim 原生( nvim -u None)
@@ -464,7 +473,7 @@ return {
     },
 
     {
-        "echasnovski/mini.pairs",
+        "nvim-mini/mini.pairs",
         -- 参考： h mini.pars 中
         -- MiniPairs.config = {
         --     -- In which modes mappings from this `config` should be created
