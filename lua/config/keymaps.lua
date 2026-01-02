@@ -123,26 +123,6 @@ map("n", "<esc><esc><esc><esc>", "<c-w>b<c-w>k<c-w>q", opts)
 map("n", "<leader>lup", ":!bash mygl 1> /dev/null<cr>:Leaderf! gtags --update<cr>", opts)
 
 
---- ----------------------------------------------------------
----   if  disable BufferLine
---- ----------------------------------------------------------
-
--- map("n", "<leader>1", ":BufferLineGoToBuffer 1<CR>", opts)
--- map("n", "<leader>2", ":BufferLineGoToBuffer 2<CR>", opts)
--- map("n", "<leader>3", ":BufferLineGoToBuffer 3<CR>", opts)
--- map("n", "<leader>4", ":BufferLineGoToBuffer 4<CR>", opts)
--- map("n", "<leader>5", ":BufferLineGoToBuffer 5<CR>", opts)
--- map("n", "<leader>6", ":BufferLineGoToBuffer 6<CR>", opts)
--- map("n", "<leader>7", ":BufferLineGoToBuffer 7<CR>", opts)
--- map("n", "<leader>8", ":BufferLineGoToBuffer 8<CR>", opts)
--- map("n", "<leader>9", ":BufferLineGoToBuffer 9<CR>", opts)
--- map("n", "<leader>$", ":BufferLineGoToBuffer -1<CR>", opts)
--- map("n", "<leader>bm", ":e ~/bm<CR>", opts)
-
---- ----------------------------------------------------------
----   else  enable tabxx
---- ----------------------------------------------------------
-
 -- 创建一个空白tab, , "$" 作用: 新建在已有 tab 的最右侧
 map("n", "<leader>tn", ":$tabnew<CR>", opts)
 -- 复制当前tab, mz 记住当前行, 以便在 tabnew % 中跳转到当前行
