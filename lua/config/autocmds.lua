@@ -42,7 +42,25 @@ vim.api.nvim_command [[au BufNewFile,BufRead bookmark_pg set filetype=c]]
 -- .local/share/nvim/lazy/nvim-lspconfig/lua/lspconfig/configs/fsautocomplete.lua:`autocmd BufNewFile,BufRead *.fs,*.fsx,*.fsi set filetype=fsharp`
 -- cxx 类型文件的 lsp 默认无法自动开启, 故增加配置开启
 -- go 类型文件的 lsp 默认也无法启动
-vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx,*.go :LspStart]]
+-- 
+-- 20260103 升级后, 下面配置, 导致 neo-tree 中点击 *.c 文件会触发报错, 暂时禁止此行
+-- 报错信息如下:
+-- 22:28   ERROR Error [Neo-tree ERROR] Error opening file: vim/_editor.lua:0: nvim_exec2()[1]..BufReadPost Autocommands for "*.c": Vim:Error executing Lua callback: /usr/share/nvim/
+-- runtime/lua/vim/lsp.lua:636: Vim:E216: No such group or event: nvim.lsp.enable FileType                                                                                             
+-- stack traceback:                                                                                                                                                                    
+--     C: in function 'doautoall'                                                                                                                                                      
+--     /usr/share/nvim/runtime/lua/vim/lsp.lua:636: in function 'enable'                                                                                                               
+--     ...ocal/share/nvim/lazy/nvim-lspconfig/plugin/lspconfig.lua:123: in function <...ocal/share/nvim/lazy/nvim-lspconfig/plugin/lspconfig.lua:107>                                  
+--     C: in function 'nvim_exec2'                                                                                                                                                     
+--     vim/_editor.lua: in function <vim/_editor.lua:0>                                                                                                                                
+--     C: in function 'pcall'                                                                                                                                                          
+--     ...hare/nvim/lazy/neo-tree.nvim/lua/neo-tree/utils/init.lua:855: in function 'open_file'                                                                                        
+--     ...y/neo-tree.nvim/lua/neo-tree/sources/common/commands.lua:846: in function 'open'                                                                                             
+--     ...y/neo-tree.nvim/lua/neo-tree/sources/common/commands.lua:868: in function 'open_with_cmd'                                                                                    
+--     ...y/neo-tree.nvim/lua/neo-tree/sources/common/commands.lua:876: in function 'open'                                                                                             
+--     ...o-tree.nvim/lua/neo-tree/sources/filesystem/commands.lua:214: in function <...o-tree.nvim/lua/neo-tree/sources/filesystem/commands.lua:213>                                  
+--
+-- vim.api.nvim_command [[au BufNewFile,BufRead *.c,*.cpp,*.cxx,*.C,*.objc,*.duda,*.proto,*.h,*.hpp,*.hxx,*.go :LspStart]]
 
 -- lazyvim markdown codeblock tags(即 tab按键上面的那个“撇”符号， ```sh  ```) 
 -- 默认不显示，通过如下设置让其显示：
