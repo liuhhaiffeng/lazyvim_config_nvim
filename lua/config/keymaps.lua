@@ -163,4 +163,4 @@ map("n", "<c-;>", "<c-w>l", opts)
 vim.api.nvim_del_keymap("n", "<leader>l")
 map("n", "<leader>ll", ":Lazy<cr>", opts)
 
-map("n", "<leader>ao", ":ClangdSwitchSourceHeader<cr>", opts)
+map("n", "<leader>ao", ":LspClangdSwitchSourceHeader<cr>", opts)
