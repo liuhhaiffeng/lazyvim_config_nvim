@@ -9,8 +9,6 @@
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
 return {
-    { 'easymotion/vim-easymotion' },
-
     -- 在nvim中执行 nvim 或 shell 命令时, 我不喜欢 popup 弹出式的方式, 我觉得它
     -- 目前还存在一些问题, 如:
     -- 1. 执行 nvim 命令  : verbose map gd , 展示的结果, 过几秒中popup窗口就自动
@@ -37,59 +35,27 @@ return {
             messages = { enabled = false, },
         },
     },
-
-    -- how to show file encoding in statusbar
-    --  https://github.com/LazyVim/LazyVim/discussions/672
-  {
-    "nvim-lualine/lualine.nvim",
-    opts = function(_, opts)
-        table.insert(opts.sections.lualine_x, "encoding")
-        table.insert(opts.sections.lualine_x, "fileformat")
-        table.insert(opts.sections.lualine_x, "filetype")
-        table.insert(opts.sections.lualine_y, "%L")   -- 显示总行数
-        table.insert(opts.sections.lualine_y, "selectioncount")
-        -- table.insert(opts.sections.lualine_y, "diagnostics")    -- 左侧默认已经有了，这里就不冗余添加了
-        table.remove(opts.sections.lualine_z)  -- 去除 时间显示
-
-        -- 某些场景下，我需要显示 full path， 通过此设定
-        -- 参考：https://github.com/LazyVim/LazyVim/discussions/3010
-        -- 参考2： ~/.local/share/nvim/lazy/lualine.nvim/doc/lualine.txt 736
-        -- table.insert(opts.sections.lualine_c, {
-        --     "filename",
-        --     path = 3,
-        -- })
-  end,
-  },
-
-    -- LeaderF 依赖 python2 或 python3
-    -- 对于 vim --version 中要有 +python3, 否则需要手动编译(包含 python对应版本)
-    -- 对于 nvim, 其默认不直接依赖python 
-    -- 使用 echo has('python') 或 echo has('python3')) 查看时会发现均为 0,
-    -- nvim 需要使用 pip3 install pynvim 安装 pynvim, 默认安装后, 再使用上述 
-    -- echo xx 查询, 就 OK 了, 这时使用 Leaderf 才没有问题
-    -- 参考: https://carakan.net/blog/2020/04/configuring-python3-on-neovim/
     {
-        "Yggdroot/LeaderF",
-        config = function()
-            -- 取消默认快捷键映射
-            local function unmap_leaderf_shortcuts()
-                -- 方法1  实测不生效, 原因未知
-                -- vim.g.Lf_ShortcutF = ''
-                -- vim.g.Lf_ShortcutB = ''
+        -- how to show file encoding in statusbar
+        --  https://github.com/LazyVim/LazyVim/discussions/672
+        "nvim-lualine/lualine.nvim",
+        opts = function(_, opts)
+            table.insert(opts.sections.lualine_x, "encoding")
+            table.insert(opts.sections.lualine_x, "fileformat")
+            table.insert(opts.sections.lualine_x, "filetype")
+            table.insert(opts.sections.lualine_y, "%L")   -- 显示总行数
+            table.insert(opts.sections.lualine_y, "selectioncount")
+            -- table.insert(opts.sections.lualine_y, "diagnostics")    -- 左侧默认已经有了，这里就不冗余添加了
+            table.remove(opts.sections.lualine_z)  -- 去除 时间显示
 
-                -- 方法2
-                -- vim.keymap.del("n", "<leader>f")
-                -- vim.keymap.del("n", "<leader>b")
-
-                -- 方法3
-                vim.cmd("let g:Lf_ShortcutF = ''")
-                vim.cmd("let g:Lf_ShortcutB = ''")
-            end
-            unmap_leaderf_shortcuts()
+            -- 某些场景下，我需要显示 full path， 通过此设定
+            -- 参考：https://github.com/LazyVim/LazyVim/discussions/3010
+            -- 参考2： ~/.local/share/nvim/lazy/lualine.nvim/doc/lualine.txt 736
+            -- table.insert(opts.sections.lualine_c, {
+            --     "filename",
+            --     path = 3,
+            -- })
         end,
-    },
-    {
-        "vim-scripts/TagHighlight",
     },
     {
         "nvim-mini/mini.pairs",
@@ -114,4 +80,44 @@ return {
             inlay_hints = { enabled = false },
         },
     },
+    -- lazyVim 之前使用 nvim-cmp 来自动补全，更新后使用 blink.cmp， 后者默认使用
+    -- enter 进行补全，使用不习惯，修改为 tab 上下选择和确认补全
+    -- https://github.com/LazyVim/LazyVim/discussions/5152
+    --
+    -- blink.cmp as nvim-cmp’s alternative #4679
+    -- https://github.com/LazyVim/LazyVim/discussions/4679
+    {
+        "Saghen/blink.cmp",
+        opts = {
+            keymap = {
+                -- 使用 enter 选中
+                -- preset = "enter",
+                -- 使用 tab 选中
+                preset = "super-tab",
+                ["<Tab>"] = { "select_next", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "fallback" },
+                ['<C-y>'] = { 'select_and_accept' },
+            },
+            -- maybe optional 
+            -- blink.cmp 升级后，再次 nv 打开文件时报错：
+            --   blink.cmp utils.lua:28: completion.list.   selection: expected table, got string
+            -- 原因是这里对应的配置也要同步修改如下：
+            -- https://github.com/Saghen/blink.cmp/issues/948
+            -- completion = { list = { selection = "auto_insert" } },
+            completion = { list = { selection = { preselect = false, auto_insert = true } },
+
+                -- https://cmp.saghen.dev/configuration/general.html
+                -- Disable auto brackets
+                -- NOTE: some LSPs may add auto brackets themselves anyway
+                accept = { auto_brackets = { enabled = false }, },
+            },
+
+            -- blink.cmp  Falling back to Lua implementation due to error while 
+            -- downloading pre-built binary, set fuzzy.implementation to  
+            -- "prefer_rust"  or  "lua"  to disable this warning.
+            fuzzy = { implementation = "lua" },
+
+        },
+    },
+
 }
