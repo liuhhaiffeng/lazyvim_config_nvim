@@ -21,32 +21,28 @@ map("i", "jj", "<esc>", opts)
 map("n", "<leader>mo", ":set mouse=a<CR>", opts)
 map("n", "<leader>mf", ":set mouse=<CR>", opts)
 
-map("n", "<F9>", "zfi{", opts)
-map("n", "<F10>", "zo", opts)
+-- map("n", "<F9>", "zfi{", opts)
+-- map("n", "<F10>", "zo", opts)
 
 
--- 创建一个空白tab, , "$" 作用: 新建在已有 tab 的最右侧
-map("n", "<leader>tn", ":$tabnew<CR>", opts)
--- 复制当前tab, mz 记住当前行, 以便在 tabnew % 中跳转到当前行
--- td: tab duplication
-map("n", "<leader>td", "mz:$tabnew %<CR>", opts)
--- # 切换到tab1 (注： tab页从1开始)
-map("n", "<leader>1",  ":tabn 1<cr>", opts)
-map("n", "<leader>2",  ":tabn 2<cr>", opts)
-map("n", "<leader>3",  ":tabn 3<cr>", opts)
-map("n", "<leader>4",  ":tabn 4<cr>", opts)
-map("n", "<leader>5",  ":tabn 5<cr>", opts)
-map("n", "<leader>6",  ":tabn 6<cr>", opts)
-map("n", "<leader>7",  ":tabn 7<cr>", opts)
-map("n", "<leader>8",  ":tabn 8<cr>", opts)
-map("n", "<leader>9",  ":tabn 9<cr>", opts)
--- tc: table close
-map("n", "<leader>tc",  ":tabclose<cr>", opts)
-map("n", "<leader>bm", ":$tabnew ~/bm<cr>", opts)
-
---- ----------------------------------------------------------
----   end if
---- ----------------------------------------------------------
+-- -- 创建一个空白tab, , "$" 作用: 新建在已有 tab 的最右侧
+-- map("n", "<leader>tn", ":$tabnew<CR>", opts)
+-- -- 复制当前tab, mz 记住当前行, 以便在 tabnew % 中跳转到当前行
+-- -- td: tab duplication
+-- map("n", "<leader>td", "mz:$tabnew %<CR>", opts)
+-- -- # 切换到tab1 (注： tab页从1开始)
+-- map("n", "<leader>1",  ":tabn 1<cr>", opts)
+-- map("n", "<leader>2",  ":tabn 2<cr>", opts)
+-- map("n", "<leader>3",  ":tabn 3<cr>", opts)
+-- map("n", "<leader>4",  ":tabn 4<cr>", opts)
+-- map("n", "<leader>5",  ":tabn 5<cr>", opts)
+-- map("n", "<leader>6",  ":tabn 6<cr>", opts)
+-- map("n", "<leader>7",  ":tabn 7<cr>", opts)
+-- map("n", "<leader>8",  ":tabn 8<cr>", opts)
+-- map("n", "<leader>9",  ":tabn 9<cr>", opts)
+-- -- tc: table close
+-- map("n", "<leader>tc",  ":tabclose<cr>", opts)
+-- map("n", "<leader>bm", ":$tabnew ~/bm<cr>", opts)
 
 
 -- 错误示例: 

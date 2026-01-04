@@ -87,7 +87,7 @@ return {
     -- blink.cmp as nvim-cmp’s alternative #4679
     -- https://github.com/LazyVim/LazyVim/discussions/4679
     {
-        "Saghen/blink.cmp",
+        "saghen/blink.cmp",
         opts = {
             keymap = {
                 -- 使用 enter 选中
