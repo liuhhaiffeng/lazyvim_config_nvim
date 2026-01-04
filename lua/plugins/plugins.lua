@@ -91,4 +91,27 @@ return {
     {
         "vim-scripts/TagHighlight",
     },
+    {
+        "nvim-mini/mini.pairs",
+        -- 参考： h mini.pars 中 MiniPairs.config 
+        -- 非 "editor insert" 下, 输入"括号等", 不要"画蛇添足"的自动匹配
+        opts = {
+            modes = { insert = true, command = false, terminal = false },
+        }
+    },
+    {
+        "neovim/nvim-lspconfig",
+        opts = {
+            -- autoformat = false,
+            -- easymotion 时，clangd diagnostics 会大片显示出来，很烦，暂禁止
+            -- 参考： ~/.local/share/nvim/lazy/LazyVim/lua/lazyvim/util/extras.lua 217
+            -- diagnostics = {
+            --     virtual_text = false,
+            --     signs = false,
+            --     underline = false,
+            -- },
+            -- CXX 下不习惯 inlay_hints， 禁止掉
+            inlay_hints = { enabled = false },
+        },
+    },
 }
