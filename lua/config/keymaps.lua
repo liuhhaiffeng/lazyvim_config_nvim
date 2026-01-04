@@ -164,3 +164,7 @@ vim.api.nvim_del_keymap("n", "<leader>l")
 map("n", "<leader>ll", ":Lazy<cr>", opts)
 
 map("n", "<leader>ao", ":LspClangdSwitchSourceHeader<cr>", opts)
+
+-- lazyvim 中将 normal 下按下 s 键映射为其他功能(如: surround), 我不习惯, 
+-- 将其恢复会 vim 中的默认按键
+vim.keymap.del("n", "s")
