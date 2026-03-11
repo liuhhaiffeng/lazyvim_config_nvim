@@ -120,4 +120,45 @@ return {
         },
     },
 
+    -- snacks ctrl+/ 打开的 terminal 高度占用屏幕过大, 使用下面插件调整其默认
+    -- 高度
+    -- help: 
+    -- lazyvim 命令行中:
+    --  :h snacks-terminal-config 
+    -- 在上述帮助页面中搜索 height 关键字, 即可找到如下配置
+    {
+        "folke/edgy.nvim",
+        ---@module 'edgy'
+        ---@param opts Edgy.Config
+        opts = function(_, opts)
+            for _, pos in ipairs({ "top", "bottom", "left", "right" }) do
+                opts[pos] = opts[pos] or {}
+                table.insert(opts[pos], {
+                    ft = "snacks_terminal",
+                    size = { height = 0.2 },
+                    title = "%{b:snacks_terminal.id}: %{b:term_title}",
+                    filter = function(_buf, win)
+                        return vim.w[win].snacks_win
+                        and vim.w[win].snacks_win.position == pos
+                        and vim.w[win].snacks_win.relative == "editor"
+                        and not vim.w[win].trouble_preview
+                    end,
+                })
+            end
+        end,
+    },
+
+    -- 下面的 terminal 高度设置, 不生效, 原因未知?
+    -- {
+    --     "folke/snacks.nvim",
+    --     opts = {
+    --         terminal = {
+    --             -- 这里设置默认高度（针对水平分割）
+    --             -- 如果你想要固定行数，可以填数字，例如 15
+    --             -- 如果你想要比例，可以填 0.4 (占屏幕 40%)
+    --             size = 15,
+    --         },
+    --     },
+    -- },
+
 }
