@@ -148,17 +148,14 @@ return {
         end,
     },
 
-    -- 下面的 terminal 高度设置, 不生效, 原因未知?
-    -- {
-    --     "folke/snacks.nvim",
-    --     opts = {
-    --         terminal = {
-    --             -- 这里设置默认高度（针对水平分割）
-    --             -- 如果你想要固定行数，可以填数字，例如 15
-    --             -- 如果你想要比例，可以填 0.4 (占屏幕 40%)
-    --             size = 15,
-    --         },
-    --     },
-    -- },
+    -- 关闭默认打开的 Indent Guides
+    {
+        "folke/snacks.nvim",
+        opts = {
+            indent = {
+                enabled = false
+            },
+        },
+    },
 
 }
