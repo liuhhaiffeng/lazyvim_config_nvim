@@ -168,3 +168,8 @@ vim.opt.undofile = false
 -- to disable all animations, add the following to here
 vim.g.snacks_animate = false
 
+-- 学会适应默认不显示行号
+-- vim.opt.number = false
+-- vim.opt.relativenumber = false
+
+vim.opt.mouse= "a"
