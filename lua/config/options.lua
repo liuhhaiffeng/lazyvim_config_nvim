@@ -168,8 +168,21 @@ vim.opt.undofile = false
 -- to disable all animations, add the following to here
 vim.g.snacks_animate = false
 
--- 学会适应默认不显示行号
--- vim.opt.number = false
--- vim.opt.relativenumber = false
 
-vim.opt.mouse= "a"
+-- ctrl + / 在 win 下默认打开的 cmd.exe, 我需要 pwsh.exe
+if vim.fn.has("win32") == 1 then
+  vim.opt.shell = "pwsh.exe"
+
+  vim.opt.shellcmdflag =
+    "-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command " ..
+    "[Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.UTF8Encoding]::new();" ..
+    "$PSDefaultParameterValues['Out-File:Encoding']='utf8';" ..
+    "$PSStyle.OutputRendering='plaintext';"
+
+  vim.opt.shellredir = "2>&1 | ForEach-Object { \"$_\" } | Out-File %s; exit $LastExitCode"
+  vim.opt.shellpipe = "2>&1 | ForEach-Object { \"$_\" } | Tee-Object %s; exit $LastExitCode"
+
+  vim.opt.shellquote = ""
+  vim.opt.shellxquote = ""
+end
+
