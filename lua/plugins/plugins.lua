@@ -155,8 +155,39 @@ return {
             indent = {
                 enabled = false
             },
+            picker = {
+                sources = {
+                    files = {
+                        follow = true, -- 跟随软链接目录
+                    },
+                    grep = {
+                        follow = true, -- grep 时也跟随软链接
+                    },
+                },
+            },
         },
     },
 
+    -- add glow markdown preview
+    {
+        "ellisonleao/glow.nvim",
+        cmd = "Glow",
+        keys = {
+            { "<leader>mg", "<cmd>Glow<CR>", desc = "Markdown 终端预览" },
+        },
+        config = function()
+            require("glow").setup({
+                style = "dark", -- or "light"
+                border = "rounded", -- or "shadown"
+                -- note: width_ration 这个参数比较怪异, 不是字母意义上的窗口宽度,
+                -- 感觉有点是: 预览窗口的相对位置, 1 在最左端, 0.8 就会向右侧移动一些, 我设置
+                -- 为 0.1, 结果预览窗口位于父窗口中间, 并且宽度变得非常的小, 暂时不设置此参数,
+                -- 使用默认值
+                -- width_ratio = 0.85,
+                width =120, -- window width
+                height_ratio = 0.85,  -- relative height
+            })
+        end,
+    },
 
 }
