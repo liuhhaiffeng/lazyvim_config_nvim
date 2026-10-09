@@ -168,6 +168,29 @@ return {
         },
     },
 
+
+    -- 支持软链接目录查找
+    {
+        "nvim-telescope/telescope.nvim",
+        opts = {
+            pickers = {
+                find_files = {
+                    follow = true,
+                },
+                live_grep = {
+                    additional_args = function()
+                        return { "--follow" }
+                    end,
+                },
+                grep_string = {
+                    additional_args = function()
+                        return { "--follow" }
+                    end,
+                },
+            },
+        },
+    },
+
     -- add glow markdown preview
     {
         "ellisonleao/glow.nvim",
